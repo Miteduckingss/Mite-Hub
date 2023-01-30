@@ -1,6 +1,6 @@
 local Games = {
-  [189707] = "https://raw.githubusercontent.com/Miteduckings/Mite-Hub/main/Games/Keyless/NaturalDisasterSurvival.lua",
-  [3696971654] = "https://raw.githubusercontent.com/Miteduckings/Mite-Hub/main/Games/Keyless/NaturalDisasterSurvival.lua"
+  [189707] = "https://raw.githubusercontent.com/Miteduckingss/Mite-Hub/main/Games/Keyless/NaturalDisasterSurvival.lua",
+  [3696971654] = "https://raw.githubusercontent.com/Miteduckingss/Mite-Hub/main/Games/Keyless/NaturalDisasterSurvival.lua"
 }
 if Games[game.PlaceId] then 
   loadstring(game:HttpGet(Games[game.PlaceId]))()
