@@ -1,0 +1,3065 @@
+getgenv().SecureMode = true
+local api = loadstring(game:HttpGet("https://raw.githubusercontent.com/Miteduckingss/Mite-Hub/main/Utilities/Bee%20Swarm%20Simulator/API.lua"))()
+local bssapi = loadstring(game:HttpGet("https://raw.githubusercontent.com/Miteduckingss/Mite-Hub/main/Utilities/Bee%20Swarm%20Simulator/BeeSwarmSimulatorAPI.lua"))()
+local Rayfield = loadstring(game:HttpGet('https://raw.githubusercontent.com/shlexware/Rayfield/main/source'))()
+setclipboard("https://discord.gg/HMJqU6ya7X")
+
+local Window = Rayfield:CreateWindow({
+	Name = "Mite Hub [Bee Swarm Simulator]",
+	LoadingTitle = "Mite Hub",
+	LoadingSubtitle = "By Miteduckings",
+	ConfigurationSaving = {
+		Enabled = true,
+		FolderName = nil, 
+		FileName = "Mite Hub"
+	},
+	Discord = {
+		Enabled = true,
+		Invite = "HMJqdU6ya7X", 
+		RememberJoins = false 
+	},
+	KeySystem = true, 
+	KeySettings = {
+		Title = "Mite Hub [Bee Swarm Simulaator]",
+		Subtitle = "Key System",
+		Note = "Get Key On Discord Server (Discord Link Copied)",
+		FileName = "MiteKey",
+		SaveKey = true,
+		GrabKeyFromSite = false, 
+		Key = "RmsLdE12daLpe09djgR3dn4jsPQdSxYZ68w2"
+	}
+})
+
+local Main = Window:CreateTab("Main", 7733960981)
+local Farming = Window:CreateTab("Farming", 12298559870)
+local Event = Window:CreateTab("Event", 12300426402)
+local Planters = Window:CreateTab("Planters", 12298674057)
+local Character = Window:CreateTab("Character", 7743875962)
+local Combat = Window:CreateTab("Combat", 12031248866)
+local Teleports = Window:CreateTab("Teleports", 7733992829)
+local Hive = Window:CreateTab("Hive", 12298764310)
+local Misc = Window:CreateTab("Misc", 12300432612)
+local Settings = Window:CreateTab("Settings", 7734053495)
+local Information = Window:CreateTab("Information", 7733964719)
+
+local playerstatsevent = game:GetService("ReplicatedStorage").Events.RetrievePlayerStats
+local statstable = playerstatsevent:InvokeServer()
+local monsterspawners = game:GetService("Workspace").MonsterSpawners
+local rarename
+local ToysFolder = game:GetService('Workspace').Toys
+function rtsg() tab = game.ReplicatedStorage.Events.RetrievePlayerStats:InvokeServer() return tab end
+function maskequip(mask) local ohString1 = "Equip" local ohTable2 = { ["Mute"] = false, ["Type"] = mask, ["Category"] = "Accessory"} game:GetService("ReplicatedStorage").Events.ItemPackageEvent:InvokeServer(ohString1, ohTable2) end
+local lasttouched = nil
+local done = true
+local hi = false
+
+local temptable = {
+    version = "1.6.3",
+    MondoCollectTokens = false,
+    LastFieldColor = 'White',
+    redfields = {},
+    bluefields = {},
+    whitefields = {},
+    shouldiconvertballoonnow = false,
+    balloondetected = false,
+    puffshroomdetected = false,
+    magnitude = 70,
+    size = nil,
+    WebSocket = nil,
+    running = false,
+    tokenpath = game:GetService("Workspace").Collectibles,
+    started = {
+        vicious = false,
+        mondo = false,
+        windy = false,
+        ant = false,
+        monsters = false
+    },
+    detected = {
+        vicious = false,
+        windy = false
+    },
+    tokensfarm = false,
+    converting = false,
+    honeystart = 0,
+    grib = nil,
+    gribpos = CFrame.new(0,0,0),
+    honeycurrent = statstable.Totals.Honey,
+    dead = false,
+    float = false,
+    pepsigodmode = false,
+    pepsiautodig = false,
+    alpha = false,
+    beta = false,
+    myhiveis = false,
+    invis = false,
+    windy = nil,
+    collecting = {
+        tickets = false,
+        rares = false,
+        snowflake = false,
+        dispensers = false
+    },
+    sprouts = {
+        detected = false,
+        coords 
+    },
+    cache = {
+        autofarm = false,
+        killmondo = false,
+        vicious = false,
+        windy = false
+    },
+    allplanters = {},
+    planters = {
+        planter = {},
+        cframe = {},
+        activeplanters = {
+            type = {},
+            id = {}
+        }
+    },
+    monstertypes = {"Ladybug", "Rhino", "Spider", "Scorpion", "Mantis", "Werewolf"},
+    ["stopapypa"] = function(path, part)
+        local Closest
+        for i,v in next, path:GetChildren() do
+            if v.Name ~= "PlanterBulb" then
+                if Closest == nil then
+                    Closest = v.Soil
+                else
+                    if (part.Position - v.Soil.Position).magnitude < (Closest.Position - part.Position).magnitude then
+                        Closest = v.Soil
+                    end
+                end
+            end
+        end
+        return Closest
+    end,
+    coconuts = {},
+    crosshairs = {},
+    FuzzyBombs = {},
+    crosshair = false,
+    coconut = false,
+    fuzzy = false,
+    act = 0,
+    ['touchedfunction'] = function(v)
+        if lasttouched ~= v then
+            if v.Parent.Name == "FlowerZones" then
+                if v:FindFirstChild("ColorGroup") then
+                    if tostring(v.ColorGroup.Value) == "Red" then
+                        maskequip("Demon Mask")
+                    elseif tostring(v.ColorGroup.Value) == "Blue" then
+                        maskequip("Diamond Mask")
+                    end
+                else
+                    maskequip("Gummy Mask")
+                end
+                lasttouched = v
+            end
+        end
+    end,
+    oldtool = rtsg()["EquippedCollector"],
+    ['gacf'] = function(part, st)
+        coordd = CFrame.new(part.Position.X, part.Position.Y+st, part.Position.Z)
+        return coordd
+    end,
+    ['feed'] = function(x, y, type, amount)
+        if not amount then
+            amount = 1
+        end
+        local bo = tonumber(x)
+        local ba = tonumber(y)
+        local be = type
+        local br = tonumber(amount)
+
+        game:GetService("ReplicatedStorage").Events.ConstructHiveCellFromEgg:InvokeServer(bo, ba, be, br)
+    end,
+    foundpopstar = false,
+    item_names = {}
+}
+
+local planterst = {}
+local planterstindexed = {}
+
+if temptable.honeystart == 0 then temptable.honeystart = statstable.Totals.Honey end
+
+for i,v in next, game:GetService("Workspace").MonsterSpawners:GetDescendants() do if v.Name == "TimerAttachment" then v.Name = "Attachment" end end
+for i,v in next, game:GetService("Workspace").MonsterSpawners:GetChildren() do if v.Name == "RoseBush" then v.Name = "ScorpionBush" elseif v.Name == "RoseBush2" then v.Name = "ScorpionBush2" end end
+for i,v in next, game:GetService("Workspace").FlowerZones:GetChildren() do if v:FindFirstChild("ColorGroup") then if v:FindFirstChild("ColorGroup").Value == "Red" then table.insert(temptable.redfields, v.Name) elseif v:FindFirstChild("ColorGroup").Value == "Blue" then table.insert(temptable.bluefields, v.Name) end else table.insert(temptable.whitefields, v.Name) end end
+local flowertable = {}
+for _,z in next, game:GetService("Workspace").Flowers:GetChildren() do table.insert(flowertable, z.Position) end
+local masktable = {}
+for _,v in next, game:GetService("ReplicatedStorage").Accessories:GetChildren() do if string.match(v.Name, "Mask") then table.insert(masktable, v.Name) end end
+local collectorstable = {}
+for _,v in next, getupvalues(require(game:GetService("ReplicatedStorage").Collectors).Exists) do for e,r in next, v do table.insert(collectorstable, e) end end
+local beestable = {}
+for _,v in next, game:GetService("ReplicatedStorage").BeeModels:GetChildren() do table.insert(beestable, v.Name..' Bee') end
+local fieldstable = {}
+for _,v in next, game:GetService("Workspace").FlowerZones:GetChildren() do table.insert(fieldstable, v.Name) end
+local toystable = {}
+for _,v in next, game:GetService("Workspace").Toys:GetChildren() do table.insert(toystable, v.Name) end
+local spawnerstable = {}
+for _,v in next, game:GetService("Workspace").MonsterSpawners:GetChildren() do table.insert(spawnerstable, v.Name) end
+local accesoriestable = {}
+for _,v in next, game:GetService("ReplicatedStorage").Accessories:GetChildren() do if v.Name ~= "UpdateMeter" then table.insert(accesoriestable, v.Name) end end
+for i,v in pairs(getupvalues(require(game:GetService("ReplicatedStorage").PlanterTypes).GetTypes)) do for e,z in pairs(v) do table.insert(temptable.allplanters, e) end end
+for v,_ in next, rtsg().Eggs do table.insert(temptable.item_names, v) end
+table.sort(fieldstable)
+table.sort(accesoriestable)
+table.sort(toystable)
+table.sort(spawnerstable)
+table.sort(temptable.item_names)
+table.sort(masktable)
+table.sort(temptable.allplanters)
+table.sort(collectorstable)
+table.sort(beestable)
+
+for i,v in pairs(getupvalues(require(game:GetService("ReplicatedStorage").PlanterTypes).GetTypes)) do for e,z in pairs(v) do planterst[e] = z table.insert(planterstindexed, z) end end
+table.sort(planterst)
+for i,v in pairs(planterst) do planterst[i] = {} end
+
+local floatpad = Instance.new("Part", game:GetService("Workspace"))
+floatpad.CanCollide = false
+floatpad.Anchored = true
+floatpad.Transparency = 1
+floatpad.Name = "FloatPad"
+
+local cocopad = Instance.new("Part", game:GetService("Workspace"))
+cocopad.Name = "Coconut Part"
+cocopad.Anchored = true
+cocopad.Transparency = 1
+cocopad.Size = Vector3.new(135, 1, 100)
+cocopad.CanCollide = false
+cocopad.Position = Vector3.new(-265.52117919922, 105.91863250732, 480.86791992188)
+
+local popfolder = Instance.new("Folder", game:GetService("Workspace").Particles)
+popfolder.Name = "PopStars"
+
+local antpart = Instance.new("Part", workspace)
+antpart.Name = "Ant Autofarm Part"
+antpart.Position = Vector3.new(96, 47, 553)
+antpart.Anchored = true
+antpart.Size = Vector3.new(128, 1, 50)
+antpart.Transparency = 1
+antpart.CanCollide = false
+
+local Miteduckings = {
+    rares = {},
+    priority = {},
+    bestfields = {
+        red = "Pepper Patch",
+        white = "Coconut Field",
+        blue = "Stump Field"
+    },
+    killerMiteduckings = {},
+    toggles = {
+        autofarm = false,
+        farmclosestleaf = false,
+        farmbubbles = false,
+        autodig = false,
+        collectorsteal = false,
+        farmrares = false,
+        farmtickets = false,
+        rgbui = false,
+        farmflower = false,
+        farmfuzzy = false,
+        farmcoco = false,
+        farmflame = false,
+        farmclouds = false,
+        killmondo = false,
+        killvicious = false,
+        loopspeed = false,
+        loopjump = false,
+        autoquest = false,
+        autoboosters = false,
+        autodispense = false,
+        clock = false,
+        freeantpass = false,
+        honeystorm = false,
+        autodoquest = false,
+        disableseperators = false,
+        npctoggle = false,
+        loopfarmspeed = false,
+        mobquests = false,
+        traincrab = false,
+        tainsnail = false,
+        avoidmobs = false,
+        farmsprouts = false,
+        farmballoons = false,
+        farmsnowflakes = false,
+        collectgingerbreads = false,
+        collectcrosshairs = false,
+        farmpuffshrooms = false,
+        tptonpc = false,
+        donotfarmtokens = false,
+        convertballoons = false,
+        autostockings = false,
+        autosamovar = false,
+        autoonettart = false,
+        autocandles = false,
+        autofeast = false,
+        autoplanters = false,
+        autokillmobs = false,
+        autoant = false,
+        killwindy = false,
+        godmode = false,
+        disablerender = false,
+        bloatfarm = false,
+        autodonate = false,
+        donotdonatedrop = false,
+        instantconverters = false,
+        autospawnsprout = false,
+        faceballoons = false,
+        faceflames = false,
+        visualnight = false,
+        convertminutestoggle = false,
+        randomizespeed = false,
+        farmglitchedtokens = false,
+        freerobopass = false,
+        automasks = false,
+        donotconvert = false
+    },
+    vars = {
+        field = "Ant Field",
+        donatit = {"Treat", 1},
+        convertat = 100,
+        farmspeed = 60,
+        prefer = "Tokens",
+        walkspeed = 70,
+        jumppower = 70,
+        npcprefer = "All Quests",
+        farmtype = "Walk",
+        monstertimer = 3,
+        convertminutes = 45
+    },
+    dispensesettings = {
+        blub = false,
+        straw = false,
+        treat = false,
+        coconut = false,
+        glue = false,
+        rj = false,
+        white = false,
+        red = false,
+        blue = false
+    },
+    AutoUseSettings = {
+        ['Glitter'] = false,
+        ['Blue Extract'] = false,
+        ['Red Extract'] = false,
+        ['Glue'] = false,
+        ['Oil'] = false,
+        ['Enzymes'] = false,
+        ['Tropical Drink'] = false,
+        ['Purple Potion'] = false,
+        ['Super Smoothie'] = false
+    },
+    beessettings = {
+        general = {
+            x = 1,
+            y = 1,
+            amount = 1
+        },
+        usb = "",
+        usbtoggle = false,
+        ugb = false,
+        foodtype = "Treat",
+        af = false,
+        mutation = "Convert Amount",
+        umb = false
+    },
+    planterssettings = {
+        {
+            enabled = false,
+            Type = require(game:GetService("ReplicatedStorage").PlanterTypes).INVENTORY_ORDER[1],
+            growth = 1,
+            field = fieldstable[1]
+        },
+        {
+            enabled = false,
+            Type = require(game:GetService("ReplicatedStorage").PlanterTypes).INVENTORY_ORDER[1],
+            growth = 1,
+            field = fieldstable[2]
+        },
+        {
+            enabled = false,
+            Type = require(game:GetService("ReplicatedStorage").PlanterTypes).INVENTORY_ORDER[1],
+            growth = 1,
+            field = fieldstable[3]
+        }
+    }
+}
+
+function findFieldWithRay(pos, dir)
+    local ray = Ray.new(pos, dir)
+    local part, position = workspace:FindPartOnRayWithWhitelist(ray, {game:GetService('Workspace').FlowerZones})
+    if part then
+        return part
+    end
+end
+
+function farm(trying, important)
+    if not IsToken(trying) then return end
+    if Miteduckings.toggles.faceballoons and findballoon() ~= nil and findballoon():FindFirstChild("BalloonRoot") then api.humanoidrootpart().CFrame = CFrame.lookAt(api.humanoidrootpart().Position, Vector3.new(findballoon().BalloonRoot.Position.X, api.humanoidrootpart().Position.Y, findballoon().BalloonRoot.Position.Z)) end
+    if Miteduckings.toggles.faceflames and findclosestflame() ~= nil then api.humanoidrootpart().CFrame = CFrame.lookAt(api.humanoidrootpart().Position, Vector3.new(findclosestflame().Position.X, api.humanoidrootpart().Position.Y, findclosestflame().Position.Z)) end
+    if important and Miteduckings.toggles.bloatfarm and temptable.foundpopstar then temptable.float = true api.teleport(CFrame.new(trying.CFrame.Position) * CFrame.Angles(0, math.rad(180), 0)) end
+    if Miteduckings.toggles.randomizespeed then api.humanoid().WalkSpeed = math.random(30, 70) end
+    api.humanoid().AutoRotate = false
+    api.humanoid():MoveTo(trying.Position) 
+    repeat task.wait() until (trying.Position-api.humanoidrootpart().Position).magnitude <= 5 or not IsToken(trying) or not temptable.running
+    api.humanoid().AutoRotate = true
+end
+
+function farmold(trying, important)
+    if Miteduckings.toggles.faceballoons and findballoon() then api.humanoidrootpart().CFrame = CFrame.lookAt(api.humanoidrootpart().Position, Vector3.new(findballoon().BalloonRoot.Position.X, api.humanoidrootpart().Position.Y, findballoon().BalloonRoot.Position.Z)) end
+    if Miteduckings.toggles.faceflames and findclosestflame() then api.humanoidrootpart().CFrame = CFrame.lookAt(api.humanoidrootpart().Position, Vector3.new(findclosestflame().Position.X, api.humanoidrootpart().Position.Y, findclosestflame().Position.Z)) end
+    if Miteduckings.toggles.randomizespeed then api.humanoid().WalkSpeed = math.random(30, 70) end
+    api.humanoid().AutoRotate = false
+    api.humanoid():MoveTo(trying.Position) 
+    repeat task.wait() until (trying.Position-api.humanoidrootpart().Position).magnitude <= 5 or not IsToken(trying) or not temptable.running
+    api.humanoid().AutoRotate = true
+end
+
+function farmtickets(v)
+    if Miteduckings.toggles.farmtickets then 
+        if v.CFrame.YVector.Y == 1 and v.Transparency == 0 and v ~= nil and v.Parent ~= nil then 
+            decal = v:FindFirstChildOfClass("Decal") 
+            if decal.Texture ~= "1674871631" and decal.Texture ~= "rbxassetid://1674871631" then return end
+            temptable.collecting.tickets = true
+            temptable.float = true
+            local reenablespeed = Miteduckings.toggles.loopspeed
+            game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(v.Position) * CFrame.new(math.random(20, 30), -3, math.random(-10, 10)) 
+            repeat 
+                task.wait() 
+                api.humanoid().WalkSpeed = 25
+                api.walkTo(v.Position)
+            until not v.Parent or v.CFrame.YVector.Y ~= 1 or not v.Transparency == 0 or (v.Position-api.humanoidrootpart().Position).Magnitude > 50
+            temptable.collecting.tickets = false
+            if temptable.float then temptable.float = false end
+            Miteduckings.toggles.loopspeed = reenablespeed
+            task.wait(math.random(1, 5)/10)
+        end
+    end 
+end
+
+function farmsnowflakes(v)
+    if Miteduckings.toggles.farmsnowflakes then
+        temptable.collecting.snowflake = true
+        local SnowflakePosition = v.Position
+        api.teleport(CFrame.new(SnowflakePosition))
+        temptable.float = true
+        repeat
+            task.wait()
+        until not v.Parent or v.CFrame.YVector.Y ~= 1 
+        if temptable.float then temptable.float = false end
+        task.wait(1)
+        temptable.collecting.snowflake = false
+    end
+end
+
+function farmrares(v)
+    if Miteduckings.toggles.farmrares then 
+        if v.CFrame.YVector.Y == 1 and v.Transparency == 0 and v ~= nil and v.Parent ~= nil then
+            decal = v:FindFirstChildOfClass("Decal") 
+            if not table.find(Miteduckings.rares, string.split(decal.Texture, 'rbxassetid://')[2]) then return end
+            temptable.collecting.rares = true
+            game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(v.Position) * CFrame.new(math.random(20, 30), -3, math.random(-10, 10)) 
+            temptable.float = true
+            local reenablespeed = Miteduckings.toggles.loopspeed
+            repeat 
+                task.wait() 
+                api.humanoid().WalkSpeed = 25
+                api.walkTo(v.Position)
+            until not v.Parent or v.CFrame.YVector.Y ~= 1 or not v.Transparency == 0 or (v.Position-api.humanoidrootpart().Position).Magnitude > 50
+            temptable.collecting.rares = false
+            Miteduckings.toggles.loopspeed = reenablespeed
+            if temptable.float then temptable.float = false end
+            task.wait(math.random(1, 5)/10)
+        end 
+    end
+end
+
+function farmcombattokens(v, pos, type)
+    if type == 'crab' then
+        if v.CFrame.YVector.Y == 1 and v.Transparency == 0 and v ~= nil and v.Parent ~= nil then
+            if (v.Position - pos.Position).Magnitude < 50 then
+                repeat
+                    task.wait()
+                    api.walkTo(v.Position)
+                until not v.Parent or v.CFrame.YVector.Y ~= 1 or not v
+                api.teleport(pos)
+            end
+        end
+    elseif type == 'snail' then
+        if v.CFrame.YVector.Y == 1 and v.Transparency == 0 and v ~= nil and v.Parent ~= nil then
+            if (v.Position - pos.Position).Magnitude < 50 then
+                repeat
+                    task.wait()
+                    api.walkTo(v.Position)
+                until not v.Parent or v.CFrame.YVector.Y ~= 1 or not v
+                api.teleport(pos)
+            end
+        end
+    elseif type == 'mondo' then
+        if temptable.MondoCollectTokens then return end
+        if v.CFrame.YVector.Y == 1 and v.Transparency == 0 and v ~= nil and v.Parent ~= nil then
+            if (v.Position - pos.Position).Magnitude < 25 then
+                repeat
+                    task.wait()
+                    api.tweenNoDelay(0.5, v.CFrame)
+                until not v.Parent or v.CFrame.YVector.Y ~= 1 or not v
+                api.teleport(pos)
+            end
+        end
+    end
+end
+
+function disableall()
+    if Miteduckings.toggles.autofarm and not temptable.converting then
+        temptable.cache.autofarm = true
+        Miteduckings.toggles.autofarm = false
+    end
+    if Miteduckings.toggles.killmondo and not temptable.started.mondo then
+        Miteduckings.toggles.killmondo = false
+        temptable.cache.killmondo = true
+    end
+    if Miteduckings.toggles.killvicious and not temptable.started.vicious then
+        Miteduckings.toggles.killvicious = false
+        temptable.cache.vicious = true
+    end
+    if Miteduckings.toggles.killwindy and not temptable.started.windy then
+        Miteduckings.toggles.killwindy = false
+        temptable.cache.windy = true
+    end
+end
+
+function enableall()
+    if temptable.cache.autofarm then
+        Miteduckings.toggles.autofarm = true
+        temptable.cache.autofarm = false
+    end
+    if temptable.cache.killmondo then
+        Miteduckings.toggles.killmondo = true
+        temptable.cache.killmondo = false
+    end
+    if temptable.cache.vicious then
+        Miteduckings.toggles.killvicious = true
+        temptable.cache.vicious = false
+    end
+    if temptable.cache.windy then
+        Miteduckings.toggles.killwindy = true
+        temptable.cache.windy = false
+    end
+end
+
+function gettoken(v3)
+    if not v3 then
+        v3 = fieldposition
+    end
+    task.wait()
+    if Miteduckings.toggles.bloatfarm and temptable.foundpopstar then return end
+    for e,r in next, game:GetService("Workspace").Collectibles:GetChildren() do
+        itb = false
+        if r:FindFirstChildOfClass("Decal") and Miteduckings.toggles.enabletokenblacklisting then
+            if api.findvalue(Miteduckings.bltokens, string.split(r:FindFirstChildOfClass("Decal").Texture, 'rbxassetid://')[2]) then
+                itb = true
+            end
+        end
+        if tonumber((r.Position - game.Players.LocalPlayer.Character.HumanoidRootPart.Position).magnitude) <= temptable.magnitude/1.2 and not itb and (v3-r.Position).magnitude <= temptable.magnitude then
+            farm(r)
+        end
+    end
+end
+
+function getlinktoken(v3)
+    if not v3 then
+        v3 = fieldposition
+    end
+    task.wait()
+    if Miteduckings.toggles.bloatfarm and temptable.foundpopstar then return end
+    for e,r in next, game:GetService("Workspace").Collectibles:GetChildren() do
+        if r:FindFirstChildOfClass("Decal") and (r:FindFirstChildOfClass("Decal").Texture == '1629547638' or r:FindFirstChildOfClass("Decal").Texture == 'rbxassetid://1629547638') then
+            if tonumber((r.Position - game.Players.LocalPlayer.Character.HumanoidRootPart.Position).magnitude) <= temptable.magnitude/1.2 and (v3-r.Position).magnitude <= temptable.magnitude then
+                farm(r)
+                break
+            end
+        end
+    end
+end
+
+function makesprinklers()
+    if (game:GetService("Workspace").FlowerZones[Miteduckings.vars.field].Position - api.humanoidrootpart().Position).magnitude < temptable.magnitude then
+        local Sprinkler = rtsg().EquippedSprinkler
+        local Amount = 1
+        if Sprinkler == "Basic Sprinkler" or Sprinkler == "The Supreme Saturator" then
+            Amount = 1
+        elseif Sprinkler == "Silver Soakers" then
+            Amount = 2
+        elseif Sprinkler == "Golden Gushers" then
+            Amount = 3
+        elseif Sprinkler == "Diamond Drenchers" then
+            Amount = 4
+        end
+        local FieldSelected = game:GetService("Workspace").FlowerZones[Miteduckings.vars.field]
+        local FieldEdge1 = FieldSelected.Position + Vector3.new((FieldSelected.Size.X / 2) - 24, 0, (FieldSelected.Size.Z / 2) - 24)
+        local FieldEdge2 = FieldSelected.Position - Vector3.new((FieldSelected.Size.X / 2) - 24, 0, (FieldSelected.Size.Z / 2) - 24)
+        local FieldBounds = {
+            [1] = Vector3.new(FieldEdge1.X - FieldEdge1.X % 0.000000000000001, FieldSelected.Position.Y, FieldSelected.Position.Z),
+            [2] = Vector3.new(FieldSelected.Position.X, FieldSelected.Position.Y, FieldEdge1.Z - FieldEdge1.Z % 0.000000000000001),
+            [3] = Vector3.new(FieldEdge2.X - FieldEdge2.X % 0.000000000000001, FieldSelected.Position.Y, FieldSelected.Position.Z),
+            [4] = Vector3.new(FieldSelected.Position.X, FieldSelected.Position.Y, FieldEdge2.Z - FieldEdge2.Z % 0.000000000000001),
+        }
+        local JumpPower = api.humanoid().JumpPower
+        for Index = 1, Amount do
+            if not Miteduckings.toggles.autofarm then
+                break
+            end
+            api.humanoid().JumpPower = 70
+            if Amount == 1 then
+                api.teleport(CFrame.new(FieldSelected.Position))
+                task.wait(.1)
+                api.humanoid().Jump = true
+            elseif Amount ~= 2 then
+                api.teleport(CFrame.new(FieldBounds[Index]))
+                task.wait(.1)
+                api.humanoid().Jump = true
+            else
+                if Index == 1 then
+                    api.teleport(CFrame.new(FieldBounds[1]))
+                    task.wait(.1)
+                    api.humanoid().Jump = true
+                else
+                    api.teleport(CFrame.new(FieldBounds[3]))
+                    task.wait(.1)
+                    api.humanoid().Jump = true
+                end
+            end
+            task.wait(0.2)
+            game.ReplicatedStorage.Events.PlayerActivesCommand:FireServer({["Name"] = "Sprinkler Builder"})
+            api.humanoid().JumpPower = JumpPower
+            task.wait(1.3)
+        end
+    else
+        sprinkler = rtsg().EquippedSprinkler
+        e = 1
+        if sprinkler == "Basic Sprinkler" or sprinkler == "The Supreme Saturator" then
+            e = 1
+        elseif sprinkler == "Silver Soakers" then
+            e = 2
+        elseif sprinkler == "Golden Gushers" then
+            e = 3
+        elseif sprinkler == "Diamond Drenchers" then
+            e = 4
+        end
+        for i = 1, e do
+            k = api.humanoid().JumpPower
+            if e ~= 1 then api.humanoid().JumpPower = 70 api.humanoid().Jump = true task.wait(.2) end
+            game.ReplicatedStorage.Events.PlayerActivesCommand:FireServer({["Name"] = "Sprinkler Builder"})
+            if e ~= 1 then api.humanoid().JumpPower = k task.wait(1) end
+        end
+    end
+end
+
+function killmobs()
+    for i,v in pairs(game:GetService("Workspace").MonsterSpawners:GetChildren()) do
+        if v:FindFirstChild("Territory") then
+            if v.Name ~= "Commando Chick" and v.Name ~= "CoconutCrab" and v.Name ~= "StumpSnail" and v.Name ~= "TunnelBear" and v.Name ~= "King Beetle Cave" and not v.Name:match("CaveMonster") and not v:FindFirstChild("TimerLabel", true).Visible then
+                if v.Name:match("Werewolf") then
+                    monsterpart = game:GetService("Workspace").Territories.WerewolfPlateau.w
+                elseif v.Name:match("Mushroom") then
+                    monsterpart = game:GetService("Workspace").Territories.MushroomZone.Part
+                else
+                    monsterpart = v.Territory.Value
+                end
+                api.humanoidrootpart().CFrame = monsterpart.CFrame
+                repeat api.humanoidrootpart().CFrame = monsterpart.CFrame avoidmob() task.wait(1) until v:FindFirstChild("TimerLabel", true).Visible or api.humanoid().Health == 0
+                for i = 1, 4 do gettoken(monsterpart.Position) end
+            end
+        end
+    end
+end
+
+function IsToken(token)
+    if not token then
+        return false
+    end
+    if not token.Parent then return false end
+    if token then
+        if Miteduckings.toggles.farmballoons and findclosestballoon() then
+            if (findclosestballoon().BalloonRoot.Position - api.humanoidrootpart().Position).magnitude >= 30 then
+                return false
+            end
+        end
+        if token.Orientation.Z ~= 0 and token.Name == "C" then
+            return false
+        end
+        if token.Name == "C" then
+            if token:FindFirstChild("FrontDecal") then
+            else
+                return false
+            end
+        end
+        if not token.Name == "C" and not token.Name == "Bubble" then
+            return false
+        end
+        if not token:IsA("Part") then
+            return false
+        end
+        return true
+    else
+        return false
+    end
+end
+
+function check(ok)
+    if not ok then
+        return false
+    end
+    if not ok.Parent then return false end
+    return true
+end
+
+function findvalue(table, value)
+    for i,v in pairs(table) do
+        for e,r in pairs(v) do
+            if r == value then
+                return i
+            end
+        end
+    end
+end
+
+function getplanters()
+    for i,v in pairs(debug.getupvalues(require(game:GetService("ReplicatedStorage").LocalPlanters).LoadPlanter)[4]) do 
+        planterst[v.Type] = {}
+        if v.IsMine then
+            if planterst[v.Type][1] == nil then
+                planterst[v.Type] = {v.Type, v.ActorID, v.Pos, v.GrowthPercent}
+            end
+        end
+    end
+end
+
+function findclosestballoon()
+    local root = game:GetService("Players").LocalPlayer.Character.HumanoidRootPart
+    if root == nil then return end
+    local studs = math.huge
+    local part;
+    for _, obj in next, game:GetService("Workspace").Balloons.FieldBalloons:GetChildren() do
+        if obj:FindFirstChild("BalloonRoot") and obj:FindFirstChild("PlayerName") then
+            if obj:FindFirstChild("PlayerName").Value == game.Players.LocalPlayer.Name then
+                local distance = (root.Position - obj.BalloonRoot.Position).Magnitude
+                if distance < studs then
+                    studs = distance
+                    part = obj
+                end
+            end
+        end
+    end
+    return part
+end
+
+function findballoon()
+    for _, obj in next, game:GetService("Workspace").Balloons.FieldBalloons:GetChildren() do
+        if obj:FindFirstChild("BalloonRoot") and obj:FindFirstChild("PlayerName") then
+            if obj:FindFirstChild("PlayerName").Value == game.Players.LocalPlayer.Name then
+                part = obj
+                break
+            end
+        end
+    end
+    return part
+end
+
+function findclosestflame()
+    local root = game:GetService("Players").LocalPlayer.Character.HumanoidRootPart
+    if root == nil then return end
+    local studs = math.huge
+    local part;
+    for _, obj in next, game:GetService("Workspace").PlayerFlames:GetChildren() do
+        local distance = (root.Position - obj.Position).Magnitude
+        if distance < studs then
+            studs = distance
+            part = obj
+        end
+    end
+    return part
+end
+
+function farmant()
+    antpart.CanCollide = true
+    temptable.started.ant = true
+    anttable = {left = true, right = false}
+    temptable.oldtool = rtsg()['EquippedCollector']
+    game.ReplicatedStorage.Events.ItemPackageEvent:InvokeServer("Equip",{["Mute"] = true,["Type"] = "Spark Staff",["Category"] = "Collector"})
+    game.ReplicatedStorage.Events.ToyEvent:FireServer("Ant Challenge")
+    Miteduckings.toggles.autodig = true
+    acl = CFrame.new(127, 48, 547)
+    acr = CFrame.new(65, 48, 534)
+    task.wait(1)
+    game.ReplicatedStorage.Events.PlayerActivesCommand:FireServer({["Name"] = "Sprinkler Builder"})
+    api.humanoidrootpart().CFrame = api.humanoidrootpart().CFrame + Vector3.new(0, 15, 0)
+    task.wait(3)
+    repeat
+        task.wait()
+        for i,v in next, game.Workspace.Toys["Ant Challenge"].Obstacles:GetChildren() do
+            if v:FindFirstChild("Root") then
+                if (v.Root.Position-api.humanoidrootpart().Position).magnitude <= 40 and anttable.left then
+                    api.humanoidrootpart().CFrame = acr
+                    anttable.left = false anttable.right = true
+                    wait(.1)
+                elseif (v.Root.Position-api.humanoidrootpart().Position).magnitude <= 40 and anttable.right then
+                    api.humanoidrootpart().CFrame = acl
+                    anttable.left = true anttable.right = false
+                    wait(.1)
+                end
+            end
+        end
+    until game:GetService("Workspace").Toys["Ant Challenge"].Busy.Value == false
+    task.wait(1)
+    game.ReplicatedStorage.Events.ItemPackageEvent:InvokeServer("Equip",{["Mute"] = true,["Type"] = temptable.oldtool,["Category"] = "Collector"})
+    temptable.started.ant = false
+    antpart.CanCollide = false
+end
+
+function collectplanters()
+    getplanters()
+
+     for i,v in pairs(planterst) do
+        if v[1] == nil then continue end
+        planterToCollect = nil
+        if Miteduckings.planterssettings[1].Type == v[1] then 
+            planterToCollect = Miteduckings.planterssettings[1]
+        elseif Miteduckings.planterssettings[2].Type == v[1] then 
+            planterToCollect = Miteduckings.planterssettings[2]
+        elseif Miteduckings.planterssettings[3].Type == v[1] then 
+            planterToCollect = Miteduckings.planterssettings[3]
+        end
+        if planterToCollect == nil then continue end
+        if planterToCollect.enabled and planterToCollect.growth <= v[4] then
+            api.teleport(CFrame.new(v[3]))
+            game:GetService("ReplicatedStorage").Events.PlanterModelCollect:FireServer(v[2])
+            task.wait(1)
+            for i = 1, 5 do gettoken(CFrame.new(v[3]).Position) end
+            task.wait(1)
+            planterst[v[1]] = {}
+        end
+    end
+end
+
+function plantplanters()
+    for i,v in pairs(Miteduckings.planterssettings) do
+        if v.enabled then
+            if planterst[v.Type][1] ~= nil then continue end
+            api.teleport(game:GetService("Workspace").FlowerZones:FindFirstChild(v.field).CFrame)
+            task.wait(2)
+            api.teleport(game:GetService("Workspace").FlowerZones:FindFirstChild(v.field).CFrame)
+            game:GetService("ReplicatedStorage").Events.PlayerActivesCommand:FireServer({["Name"] = v.Type.." Planter"})
+            task.wait(1)
+        end
+    end
+end
+
+function getprioritytokens(v3)
+    if not v3 then
+        v3 = fieldposition
+    end
+    task.wait()
+    if Miteduckings.toggles.bloatfarm and temptable.foundpopstar then return end
+    for e,r in next, game:GetService("Workspace").Collectibles:GetChildren() do
+        if r:FindFirstChildOfClass("Decal") and api.findvalue(Miteduckings.priority, string.split(r:FindFirstChildOfClass("Decal").Texture, 'rbxassetid://')[2]) then
+            if tonumber((r.Position - game.Players.LocalPlayer.Character.HumanoidRootPart.Position).magnitude) <= temptable.magnitude/1.2 and (v3-r.Position).magnitude <= temptable.magnitude then
+                farm(r)
+            end
+        end
+    end
+end
+
+function gethiveballoon()
+    task.wait()
+    result = false
+    for i,hive in next, game:GetService("Workspace").Honeycombs:GetChildren() do
+        task.wait()
+        if hive:FindFirstChild("Owner") and hive:FindFirstChild("SpawnPos") then
+            if tostring(hive.Owner.Value) == game.Players.LocalPlayer.Name then
+                for e,balloon in next, game:GetService("Workspace").Balloons.HiveBalloons:GetChildren() do
+                    task.wait()
+                    if balloon:FindFirstChild("BalloonRoot") then
+                        if (balloon.BalloonRoot.Position-hive.SpawnPos.Value.Position).magnitude < 15 then
+                            result = true
+                            break
+                        end
+                    end
+                end
+            end
+        end
+    end
+    return result
+end
+
+function converthoney()
+    task.wait(0)
+    if temptable.converting then
+        if game.Players.LocalPlayer.PlayerGui.ScreenGui.ActivateButton.TextBox.Text ~= "Stop Making Honey" and game.Players.LocalPlayer.PlayerGui.ScreenGui.ActivateButton.BackgroundColor3 ~= Color3.new(201, 39, 28) or (game:GetService("Players").LocalPlayer.SpawnPos.Value.Position-game.Players.LocalPlayer.Character.HumanoidRootPart.Position).magnitude > 10 then
+            api.tween(1, game:GetService("Players").LocalPlayer.SpawnPos.Value * CFrame.fromEulerAnglesXYZ(0, 110, 0) + Vector3.new(0, 0, 9))
+            task.wait(.9)
+            if game.Players.LocalPlayer.PlayerGui.ScreenGui.ActivateButton.TextBox.Text ~= "Stop Making Honey" and game.Players.LocalPlayer.PlayerGui.ScreenGui.ActivateButton.BackgroundColor3 ~= Color3.new(201, 39, 28) or (game:GetService("Players").LocalPlayer.SpawnPos.Value.Position-game.Players.LocalPlayer.Character.HumanoidRootPart.Position).magnitude > 10 then game:GetService("ReplicatedStorage").Events.PlayerHiveCommand:FireServer("ToggleHoneyMaking") end
+            task.wait(.1)
+        end
+    end
+end
+
+function closestleaf()
+    for i,v in next, game.Workspace.Flowers:GetChildren() do
+        if temptable.running == false and tonumber((v.Position-game.Players.LocalPlayer.Character.HumanoidRootPart.Position).magnitude) < temptable.magnitude/1.4 then
+            farmold(v)
+            break
+        end
+    end
+end
+
+function getbubble()
+    for i,v in next, game.workspace.Particles:GetChildren() do
+        if string.find(v.Name, "Bubble") and temptable.running == false and tonumber((v.Position-game.Players.LocalPlayer.Character.HumanoidRootPart.Position).magnitude) < temptable.magnitude/1.4 then
+            if temptable.foundpopstar and Miteduckings.toggles.bloatfarm then
+                farm(v, true)
+            else
+                farm(v)
+            end
+            break
+        end
+    end
+end
+
+function getballoons()
+    for i,v in next, game:GetService("Workspace").Balloons.FieldBalloons:GetChildren() do
+        if v:FindFirstChild("BalloonRoot") and v:FindFirstChild("PlayerName") then
+            if v:FindFirstChild("PlayerName").Value == game.Players.LocalPlayer.Name then
+                if tonumber((v.BalloonRoot.Position-game.Players.LocalPlayer.Character.HumanoidRootPart.Position).magnitude) < temptable.magnitude/1.4 then
+                    api.walkTo(v.BalloonRoot.Position)
+                end
+            end
+        end
+    end
+end
+
+function getflower()
+    flowerrrr = flowertable[math.random(#flowertable)]
+    if tonumber((flowerrrr-game.Players.LocalPlayer.Character.HumanoidRootPart.Position).magnitude) <= temptable.magnitude/1.4 and tonumber((flowerrrr-fieldposition).magnitude) <= temptable.magnitude/1.4 then 
+        if temptable.running == false then 
+            if Miteduckings.toggles.randomizespeed then api.humanoid().WalkSpeed = math.random(30, 70) end
+            api.walkTo(flowerrrr) 
+        end 
+    end
+end
+
+function getcloud()
+    for i,v in next, game:GetService("Workspace").Clouds:GetChildren() do
+        e = v:FindFirstChild("Plane")
+        if e and tonumber((e.Position-game.Players.LocalPlayer.Character.HumanoidRootPart.Position).magnitude) < temptable.magnitude/1.4 then
+            api.walkTo(e.Position)
+        end
+    end
+end
+
+function getcoco(v)
+    if temptable.coconut then repeat task.wait() until not temptable.coconut end
+    temptable.coconut = true
+    repeat
+        task.wait()
+            temptable.float = true
+        api.tweenNoDelay(0.1, v.CFrame)
+    until not v.Parent
+    if temptable.float then temptable.float = false end
+    temptable.coconut = false
+    table.remove(temptable.coconuts, table.find(temptable.coconuts, v))
+end
+
+function getfuzzy(v)
+    if temptable.fuzzy then repeat task.wait() until not temptable.fuzzy end
+    if not v:FindFirstChild("Plane") then return end
+    local FuzzyPlane = v:FindFirstChild("Plane")
+    temptable.fuzzy = true
+    repeat
+        task.wait()
+        api.tweenNoDelay(0.1, CFrame.new(FuzzyPlane.Position.X, FuzzyPlane.Position.Y+3, FuzzyPlane.Position.Z))
+    until not v.Parent or not FuzzyPlane or not v
+    temptable.fuzzy = false
+    table.remove(temptable.FuzzyBombs, table.find(temptable.FuzzyBombs, v))
+end
+
+function getflame()
+    for i,v in next, game:GetService("Workspace").PlayerFlames:GetChildren() do
+        if tonumber((v.Position-game.Players.LocalPlayer.Character.HumanoidRootPart.Position).magnitude) < temptable.magnitude/1.4 and not rtsg().Modifiers.FlameHeat then
+            if Miteduckings.toggles.faceballoons and findballoon() then api.humanoidrootpart().CFrame = CFrame.lookAt(api.humanoidrootpart().Position, Vector3.new(findballoon().BalloonRoot.Position.X, api.humanoidrootpart().Position.Y, findballoon().BalloonRoot.Position.Z)) end
+            if Miteduckings.toggles.faceflames and findclosestflame() then api.humanoidrootpart().CFrame = CFrame.lookAt(api.humanoidrootpart().Position, Vector3.new(findclosestflame().Position.X, api.humanoidrootpart().Position.Y, findclosestflame().Position.Z)) end
+            if Miteduckings.toggles.randomizespeed then api.humanoid().WalkSpeed = math.random(30, 70) end
+            repeat 
+                api.humanoid().AutoRotate = false
+                api.humanoid():MoveTo(v.Position) 
+                task.wait()
+            until rtsg().ModifierCaches.Value.FlameHeat['_'] >= 0.9 or not v or not v.Parent or (not v:WaitForChild('PF').Enabled and not v:WaitForChild('PS').Enabled) 
+            api.humanoid().AutoRotate = true
+            break
+        end
+    end
+end
+
+function getglitchtoken()
+    for i,v in pairs(game:GetService("Workspace").Camera.DupedTokens:GetChildren()) do
+        if tonumber((v.Position-game.Players.LocalPlayer.Character.HumanoidRootPart.Position).magnitude) < temptable.magnitude/1.4 then
+            if Miteduckings.toggles.faceballoons and findballoon() then api.humanoidrootpart().CFrame = CFrame.lookAt(api.humanoidrootpart().Position, Vector3.new(findballoon().BalloonRoot.Position.X, api.humanoidrootpart().Position.Y, findballoon().BalloonRoot.Position.Z)) end
+            if Miteduckings.toggles.faceflames and findclosestflame() then api.humanoidrootpart().CFrame = CFrame.lookAt(api.humanoidrootpart().Position, Vector3.new(findclosestflame().Position.X, api.humanoidrootpart().Position.Y, findclosestflame().Position.Z)) end
+            if Miteduckings.toggles.randomizespeed then api.humanoid().WalkSpeed = math.random(30, 70) end
+            repeat
+                api.humanoid().AutoRotate = false
+                api.humanoid():MoveTo(v.Position)
+                task.wait()
+            until not v or not v.Parent
+            api.humanoid().AutoRotate = true
+            break
+        end
+    end
+end
+
+function avoidmob()
+    for i,v in next, game:GetService("Workspace").Monsters:GetChildren() do
+        if v:FindFirstChild("Head") then
+            if (v.Head.Position-game.Players.LocalPlayer.Character.HumanoidRootPart.Position).magnitude < 35 and api.humanoid():GetState() ~= Enum.HumanoidStateType.Freefall then
+                game.Players.LocalPlayer.Character.Humanoid.Jump = true
+            end
+        end
+    end
+end
+
+function getcrosshairs(v)
+    if v.BrickColor ~= BrickColor.new("Lime green") and v.BrickColor ~= BrickColor.new("Flint") then
+    if temptable.crosshair then repeat task.wait() until not temptable.crosshair end
+    temptable.crosshair = true
+    repeat 
+        task.wait() 
+        api.walkTo(v.Position)
+    until not v.Parent or v.BrickColor == BrickColor.new("Forest green") or v.BrickColor == BrickColor.new("Royal purple")
+    task.wait(.1)
+    temptable.crosshair = false
+    table.remove(temptable.crosshairs, table.find(temptable.crosshairs, v))
+    else
+        table.remove(temptable.crosshairs, table.find(temptable.crosshairs, v))
+    end
+end
+
+function makequests()
+    pcall(function()
+    for i,v in next, game:GetService("Workspace").NPCs:GetChildren() do
+        if v.Name ~= "Ant Challenge Info" and v.Name ~= "Bubble Bee Man 2" and v.Name ~= "Wind Shrine" and v.Name ~= "Gummy Bear" then if v:FindFirstChild("Platform") then if v.Platform:FindFirstChild("AlertPos") then if v.Platform.AlertPos:FindFirstChild("AlertGui") then if v.Platform.AlertPos.AlertGui:FindFirstChild("ImageLabel") then
+            image = v.Platform.AlertPos.AlertGui.ImageLabel
+            button = game:GetService("Players").LocalPlayer.PlayerGui.ScreenGui.ActivateButton.MouseButton1Click
+            if image.ImageTransparency == 0 then
+                if Miteduckings.toggles.tptonpc then
+                    game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(v.Platform.Position.X, v.Platform.Position.Y+3, v.Platform.Position.Z)
+                    task.wait(1)
+                else
+                    api.tween(2,CFrame.new(v.Platform.Position.X, v.Platform.Position.Y+3, v.Platform.Position.Z))
+                    task.wait(3)
+                end
+                game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(v.Platform.Position.X, v.Platform.Position.Y+3, v.Platform.Position.Z)
+                task.wait(.1)
+                VirtualPressButton('E')
+                task.wait(8)
+                if image.ImageTransparency == 0 then
+                    game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(v.Platform.Position.X, v.Platform.Position.Y+3, v.Platform.Position.Z)
+                    task.wait(.1)
+                    VirtualPressButton('E')
+                end
+                task.wait(2)
+            end
+        end     
+    end end end end end end)
+end
+
+function VirtualPressButton(Button)
+    game:GetService('VirtualInputManager'):SendKeyEvent(true, Button, false, nil)
+end
+
+function CheckToyCooldown(Toy)
+    return (os.time() - (rtsg().ToyTimes[Toy] or math.huge) + 10 ) > game:GetService("Workspace").Toys[Toy].Cooldown.Value or false
+end
+
+function UseDispensers()
+    if Miteduckings.toggles.honeystorm and CheckToyCooldown('Honeystorm') then
+    api.teleport(CFrame.new(ToysFolder['Honeystorm'].Platform.CFrame.Position) * CFrame.new(0,3,0))
+        game.ReplicatedStorage.Events.ToyEvent:FireServer("Honeystorm")
+    end
+    if Miteduckings.toggles.autospawnsprout and CheckToyCooldown('Sprout Summoner') then
+        api.teleport(CFrame.new(ToysFolder['Sprout Summoner'].Platform.CFrame.Position) * CFrame.new(0,3,0))
+        game.ReplicatedStorage.Events.ToyEvent:FireServer("Sprout Summoner")
+    end
+    if Miteduckings.toggles.autodispense then
+        if Miteduckings.dispensesettings.rj and CheckToyCooldown('Free Royal Jelly Dispenser') then
+            api.teleport(CFrame.new(ToysFolder['Free Royal Jelly Dispenser'].Platform.CFrame.Position) * CFrame.new(0,3,0))
+             game.ReplicatedStorage.Events.ToyEvent:FireServer("Free Royal Jelly Dispenser")
+        end
+        if Miteduckings.dispensesettings.blub and CheckToyCooldown('Blueberry Dispenser') then
+            api.teleport(CFrame.new(ToysFolder['Blueberry Dispenser'].Platform.CFrame.Position) * CFrame.new(0,3,0))
+              game.ReplicatedStorage.Events.ToyEvent:FireServer("Blueberry Dispenser")
+        end
+        if Miteduckings.dispensesettings.straw and CheckToyCooldown('Strawberry Dispenser') then
+            api.teleport(CFrame.new(ToysFolder['Strawberry Dispenser'].Platform.CFrame.Position) * CFrame.new(0,3,0))
+              game.ReplicatedStorage.Events.ToyEvent:FireServer("Strawberry Dispenser")
+        end
+        if Miteduckings.dispensesettings.treat and CheckToyCooldown('Treat Dispenser') then
+            api.teleport(CFrame.new(ToysFolder['Treat Dispenser'].Platform.CFrame.Position) * CFrame.new(0,3,0))
+             game.ReplicatedStorage.Events.ToyEvent:FireServer("Treat Dispenser")
+        end
+        if Miteduckings.dispensesettings.coconut and CheckToyCooldown('Coconut Dispenser') then
+            api.teleport(CFrame.new(ToysFolder['Coconut Dispenser'].Platform.CFrame.Position) * CFrame.new(0,3,0))
+             game.ReplicatedStorage.Events.ToyEvent:FireServer("Coconut Dispenser")
+        end
+        if Miteduckings.dispensesettings.glue and CheckToyCooldown('Glue Dispenser') then
+            api.teleport(CFrame.new(ToysFolder['Glue Dispenser'].Platform.CFrame.Position) * CFrame.new(0,3,0))
+             game.ReplicatedStorage.Events.ToyEvent:FireServer("Glue Dispenser")
+        end
+    end
+    if Miteduckings.toggles.autoboosters then
+        if Miteduckings.dispensesettings.white and CheckToyCooldown('Field Booster') then
+            api.teleport(CFrame.new(ToysFolder['Field Booster'].Platform.CFrame.Position) * CFrame.new(0,3,0))
+              game.ReplicatedStorage.Events.ToyEvent:FireServer("Field Booster")
+        end
+        if Miteduckings.dispensesettings.red and CheckToyCooldown('Red Field Booster') then
+            api.teleport(CFrame.new(ToysFolder['Red Field Booster'].Platform.CFrame.Position) * CFrame.new(0,3,0))
+              game.ReplicatedStorage.Events.ToyEvent:FireServer("Red Field Booster")
+        end
+        if Miteduckings.dispensesettings.blue and CheckToyCooldown('Blue Field Booster') then
+            api.teleport(CFrame.new(ToysFolder['Blue Field Booster'].Platform.CFrame.Position) * CFrame.new(0,3,0))
+              game.ReplicatedStorage.Events.ToyEvent:FireServer("Blue Field Booster")
+        end
+    end
+    if Miteduckings.toggles.clock and CheckToyCooldown('Wealth Clock') then
+        api.teleport(CFrame.new(ToysFolder['Wealth Clock'].Platform.CFrame.Position) * CFrame.new(0,3,0))
+         game.ReplicatedStorage.Events.ToyEvent:FireServer("Wealth Clock")
+    end
+    if Miteduckings.toggles.freeantpass and CheckToyCooldown('Free Ant Pass Dispenser') and rtsg().Eggs.AntPass < 10 then
+        api.teleport(CFrame.new(ToysFolder['Free Ant Pass Dispenser'].Platform.CFrame.Position) * CFrame.new(0,3,0))
+          game.ReplicatedStorage.Events.ToyEvent:FireServer("Free Ant Pass Dispenser")
+    end
+    if Miteduckings.toggles.freerobopass and CheckToyCooldown('Free Robo Pass Dispenser') and rtsg().Eggs.RoboPass < 10 then
+        api.teleport(CFrame.new(ToysFolder['Free Robo Pass Dispenser'].Platform.CFrame.Position) * CFrame.new(0,3,0))
+          game.ReplicatedStorage.Events.ToyEvent:FireServer("Free Robo Pass Dispenser")
+    end
+    if Miteduckings.toggles.autosamovar and CheckToyCooldown("Samovar") and game:GetService("Workspace").Toys['Samovar']:FindFirstChild("ModelAfter") then
+         api.teleport(CFrame.new(ToysFolder['Samovar'].Platform.CFrame.Position) * CFrame.new(0,3,0))
+        game.ReplicatedStorage.Events.ToyEvent:FireServer("Samovar")
+        platformm = game:GetService("Workspace").Toys.Samovar.Platform
+        task.wait(2)
+        for i,v in pairs(game.Workspace.Collectibles:GetChildren()) do
+            if (v.Position-platformm.Position).magnitude < 25 and v.CFrame.YVector.Y == 1 then
+                repeat task.wait() api.humanoidrootpart().CFrame = CFrame.new(v.CFrame.Position) until not v or not v.Parent
+            end
+        end 
+    end
+    if Miteduckings.toggles.autostockings and CheckToyCooldown("Stockings") and game:GetService("Workspace").Toys['Stockings']:FindFirstChild("ModelAfter") then
+        api.teleport(CFrame.new(ToysFolder['Stockings'].Platform.CFrame.Position) * CFrame.new(0,3,0))
+        game.ReplicatedStorage.Events.ToyEvent:FireServer("Stockings")
+    end
+    if Miteduckings.toggles.autoonettart and CheckToyCooldown("Onett's Lid Art") and game:GetService("Workspace").Toys["Onett's Lid Art"]:FindFirstChild("ModelAfter") then
+        api.teleport(CFrame.new(ToysFolder["Onett's Lid Art"].Platform.CFrame.Position) * CFrame.new(0,3,0))
+        game.ReplicatedStorage.Events.ToyEvent:FireServer("Onett's Lid Art")
+    end
+    if Miteduckings.toggles.autocandles and CheckToyCooldown("Honeyday Candles") and game:GetService("Workspace").Toys['Honeyday Candles']:FindFirstChild("ModelAfter") then
+        api.teleport(CFrame.new(ToysFolder['Honeyday Candles'].Platform.CFrame.Position) * CFrame.new(0,3,0))
+        game.ReplicatedStorage.Events.ToyEvent:FireServer("Honeyday Candles")
+    end
+    if Miteduckings.toggles.autofeast and CheckToyCooldown('Beesmas Feast') and game:GetService("Workspace").Toys['Beesmas Feast']:FindFirstChild("ModelAfter") then
+        api.teleport(CFrame.new(ToysFolder['Beesmas Feast'].Platform.CFrame.Position) * CFrame.new(0,3,0))
+        game.ReplicatedStorage.Events.ToyEvent:FireServer("Beesmas Feast")
+    end
+end
+
+Main:CreateSection("Main Section")
+
+Main:CreateDropdown({
+   Name = "Field",
+   Options = fieldstable,
+   CurrentOption = fieldstable[1],
+   Flag = "Dropdown1",
+   Callback = function(Option)
+   Miteduckings.vars.field = Option
+   end,
+})
+
+Main:CreateSlider({
+   Name = "Convert at:",
+   Range = {0, 100},
+   Increment = 10,
+   Suffix = "%",
+   CurrentValue = 100,
+   Flag = "Slider1",
+   Callback = function(Value)
+   Miteduckings.vars.convertat = Value
+   end,
+})
+
+Main:CreateToggle({
+   Name = "Autofarm",
+   CurrentValue = false,
+   Flag = "Toggle1",
+   Callback = function(State)
+Miteduckings.toggles.autofarm = State
+   end,
+})
+
+Main:CreateToggle({
+   Name = "Auto Sprinkler",
+   CurrentValue = false,
+   Flag = "Toggle1",
+   Callback = function(State)
+Miteduckings.toggles.autosprinkler = State
+   end,
+})
+
+Main:CreateToggle({
+   Name = "Auto Dig",
+   CurrentValue = false,
+   Flag = "Toggle1",
+   Callback = function(State)
+Miteduckings.toggles.autodig = State
+   end,
+})
+
+Main:CreateToggle({
+   Name = "Auto Dispenser",
+   CurrentValue = false,
+   Flag = "Toggle1",
+   Callback = function(State)
+Miteduckings.toggles.autodispense = State
+   end,
+})
+
+Main:CreateToggle({
+   Name = "Auto Field Boosters",
+   CurrentValue = false,
+   Flag = "Toggle1",
+   Callback = function(State)
+Miteduckings.toggles.autoboosters = State
+   end,
+})
+
+Farming:CreateSection("Auto Section")
+
+Farming:CreateToggle({
+   Name = "Auto Accept/Confirm Quests",
+   CurrentValue = false,
+   Flag = "Toggle1",
+   Callback = function(State)
+Miteduckings.toggles.autoquest = State
+   end,
+})
+
+Farming:CreateToggle({
+   Name = "Auto Do Quests",
+   CurrentValue = false,
+   Flag = "Toggle1",
+   Callback = function(State)
+Miteduckings.toggles.autodoquest = State
+   end,
+})
+
+Farming:CreateToggle({
+   Name = "Auto Wealth Clock",
+   CurrentValue = false,
+   Flag = "Toggle1",
+   Callback = function(State)
+Miteduckings.toggles.clock = State
+   end,
+})
+
+Farming:CreateToggle({
+   Name = "Auto Free Antpasses",
+   CurrentValue = false,
+   Flag = "Toggle1",
+   Callback = function(State)
+Miteduckings.toggles.freeantpass = State
+   end,
+})
+
+Farming:CreateToggle({
+   Name = "Auto Special Sprout Summoner",
+   CurrentValue = false,
+   Flag = "Toggle1",
+   Callback = function(State)
+Miteduckings.toggles.autospawnsprout = State
+   end,
+})
+
+
+Farming:CreateToggle({
+   Name = "Auto Honeystorm",
+   CurrentValue = false,
+   Flag = "Toggle1",
+   Callback = function(State)
+Miteduckings.toggles.honeystorm = State
+   end,
+})
+
+Farming:CreateToggle({
+   Name = "Auto Sprouts",
+   CurrentValue = false,
+   Flag = "Toggle1",
+   Callback = function(State)
+Miteduckings.toggles.farmsprouts = State
+   end,
+})
+
+Farming:CreateToggle({
+   Name = "Auto Puffshrooms",
+   CurrentValue = false,
+   Flag = "Toggle1",
+   Callback = function(State)
+Miteduckings.toggles.farmpuffshrooms = State
+   end,
+})
+
+Farming:CreateToggle({
+   Name = "Auto Tickets",
+   CurrentValue = false,
+   Flag = "Toggle1",
+   Callback = function(State)
+Miteduckings.toggles.farmtickets = State
+   end,
+})
+
+Farming:CreateToggle({
+   Name = "Teleport To Rares",
+   CurrentValue = false,
+   Flag = "Toggle1",
+   Callback = function(State)
+Miteduckings.toggles.farmrares = State
+   end,
+})
+
+Farming:CreateToggle({
+   Name = "Auto Equip Field Masks",
+   CurrentValue = false,
+   Flag = "Toggle1",
+   Callback = function(State)
+Miteduckings.toggles.automasks = State
+   end,
+})
+
+Farming:CreateToggle({
+   Name = "Auto Ant Challenge",
+   CurrentValue = false,
+   Flag = "Toggle1",
+   Callback = function(State)
+Miteduckings.toggles.killmondo= State
+   end,
+})
+
+Farming:CreateToggle({
+   Name = "Auto Bubbles",
+   CurrentValue = false,
+   Flag = "Toggle1",
+   Callback = function(State)
+Miteduckings.toggles.farmbubbles = State
+   end,
+})
+
+Farming:CreateToggle({
+   Name = "Auto Bubble Bloat Helper",
+   CurrentValue = false,
+   Flag = "Toggle1",
+   Callback = function(State)
+Miteduckings.toggles.bloatfarm = State
+   end,
+})
+
+Farming:CreateToggle({
+   Name = "Auto Flames",
+   CurrentValue = false,
+   Flag = "Toggle1",
+   Callback = function(State)
+Miteduckings.toggles.farmflame = State
+   end,
+})
+
+Farming:CreateToggle({
+   Name = "Auto Coconuts & Showers",
+   CurrentValue = false,
+   Flag = "Toggle1",
+   Callback = function(State)
+Miteduckings.toggles.farmcoco = State
+   end,
+})
+
+Farming:CreateToggle({
+   Name = "Auto Precise Crosshairs",
+   CurrentValue = false,
+   Flag = "Toggle1",
+   Callback = function(State)
+Miteduckings.toggles.collectcrosshairs = State
+   end,
+})
+
+Farming:CreateToggle({
+   Name = "Auto Fuzzy Bombs",
+   CurrentValue = false,
+   Flag = "Toggle1",
+   Callback = function(State)
+Miteduckings.toggles.farmfuzzy = State
+   end,
+})
+
+Farming:CreateToggle({
+   Name = "Auto Glitched Tokens",
+   CurrentValue = false,
+   Flag = "Toggle1",
+   Callback = function(State)
+Miteduckings.toggles.farmglitchedtokens = State
+   end,
+})
+
+Farming:CreateToggle({
+   Name = "Auto Under Ballons",
+   CurrentValue = false,
+   Flag = "Toggle1",
+   Callback = function(State)
+Miteduckings.toggles.farmballoons = State
+   end,
+})
+
+Farming:CreateToggle({
+   Name = "Auto Under Clouds",
+   CurrentValue = false,
+   Flag = "Toggle1",
+   Callback = function(State)
+Miteduckings.toggles.farmclouds = State
+   end,
+})
+
+Farming:CreateToggle({
+   Name = "Auto Face Flames",
+   CurrentValue = false,
+   Flag = "Toggle1",
+   Callback = function(State)
+Miteduckings.toggles.faceflames = State
+   end,
+})
+
+Farming:CreateToggle({
+   Name = "Auto Face Ballons",
+   CurrentValue = false,
+   Flag = "Toggle1",
+   Callback = function(State)
+Miteduckings.toggles.faceballoons = State
+   end,
+})
+
+Event:CreateSection("Event Section")
+
+Event:CreateToggle({
+   Name = "Auto Samovar",
+   CurrentValue = false,
+   Flag = "Toggle1",
+   Callback = function(State)
+Miteduckings.toggles.autosamovar = State
+   end,
+})
+
+Event:CreateToggle({
+   Name = "Auto Stockings",
+   CurrentValue = false,
+   Flag = "Toggle1",
+   Callback = function(State)
+Miteduckings.toggles.autostockings = State
+   end,
+})
+
+Event:CreateToggle({
+   Name = "Auto Honey Candles",
+   CurrentValue = false,
+   Flag = "Toggle1",
+   Callback = function(State)
+Miteduckings.toggles.autocandles = State
+   end,
+})
+
+Event:CreateToggle({
+   Name = "Auto Beesmas Feast",
+   CurrentValue = false,
+   Flag = "Toggle1",
+   Callback = function(State)
+Miteduckings.toggles.autofeast = State
+   end,
+})
+
+Event:CreateToggle({
+   Name = "Auto Onett's Lid Art",
+   CurrentValue = false,
+   Flag = "Toggle1",
+   Callback = function(State)
+Miteduckings.toggles.autoonettart = State
+   end,
+})
+
+Event:CreateToggle({
+   Name = "Auto Snowflakes",
+   CurrentValue = false,
+   Flag = "Toggle1",
+   Callback = function(State)
+Miteduckings.toggles.farmsnowflakes = State
+   end,
+})
+
+Planters:CreateSection("First Planter")
+
+Planters:CreateDropdown({
+   Name = "Planter",
+   Options = require(game:GetService("ReplicatedStorage").PlanterTypes).INVENTORY_ORDER,
+   CurrentOption = require(game:GetService("ReplicatedStorage").PlanterTypes).INVENTORY_ORDER[1],
+   Flag = "Dropdown1",
+   Callback = function(Option)
+   Miteduckings.planterssettings[1].Type = Option
+   end,
+})
+
+Planters:CreateDropdown({
+   Name = "Field",
+   Options = fieldstable,
+   CurrentOption = fieldstable[1],
+   Flag = "Dropdown1",
+   Callback = function(Option)
+   Miteduckings.planterssettings[1].field = Option
+   end,
+})
+
+Planters:CreateSlider({
+   Name = "Growth Percent",
+   Range = {0, 100},
+   Increment = 10,
+   Suffix = "%",
+   CurrentValue = 100,
+   Flag = "Slider1",
+   Callback = function(Value)
+   Miteduckings.planterssettings[1].growth = (Value / 100) or 1 / 100
+   end,
+})
+
+Planters:CreateToggle({
+   Name = "Auto Plant",
+   CurrentValue = false,
+   Flag = "Toggle1",
+   Callback = function(State)
+Miteduckings.planterssettings[1].enabled = State
+   end,
+})
+
+Planters:CreateSection("Second Planter")
+
+Planters:CreateDropdown({
+   Name = "Planter",
+   Options = require(game:GetService("ReplicatedStorage").PlanterTypes).INVENTORY_ORDER,
+   CurrentOption = require(game:GetService("ReplicatedStorage").PlanterTypes).INVENTORY_ORDER[1],
+   Flag = "Dropdown1",
+   Callback = function(Option)
+   Miteduckings.planterssettings[2].Type = Option
+   end,
+})
+
+Planters:CreateDropdown({
+   Name = "Field",
+   Options = fieldstable,
+   CurrentOption = fieldstable[2],
+   Flag = "Dropdown1",
+   Callback = function(Option)
+   Miteduckings.planterssettings[2].field = Option
+   end,
+})
+
+Planters:CreateSlider({
+   Name = "Growth Percent",
+   Range = {0, 100},
+   Increment = 10,
+   Suffix = "%",
+   CurrentValue = 100,
+   Flag = "Slider1",
+   Callback = function(Value)
+   Miteduckings.planterssettings[2].growth = (Value / 100) or 1 / 100
+   end,
+})
+
+Planters:CreateToggle({
+   Name = "Auto Plant",
+   CurrentValue = false,
+   Flag = "Toggle1",
+   Callback = function(State)
+Miteduckings.planterssettings[2].enabled = State
+   end,
+})
+
+Planters:CreateSection("Third Planter")
+
+Planters:CreateDropdown({
+   Name = "Planter",
+   Options = require(game:GetService("ReplicatedStorage").PlanterTypes).INVENTORY_ORDER,
+   CurrentOption = require(game:GetService("ReplicatedStorage").PlanterTypes).INVENTORY_ORDER[1],
+   Flag = "Dropdown1",
+   Callback = function(Option)
+   Miteduckings.planterssettings[3].Type = Option
+   end,
+})
+
+Planters:CreateDropdown({
+   Name = "Field",
+   Options = fieldstable,
+   CurrentOption = fieldstable[3],
+   Flag = "Dropdown1",
+   Callback = function(Option)
+   Miteduckings.planterssettings[3].field = Option
+   end,
+})
+
+Planters:CreateSlider({
+   Name = "Growth Percent",
+   Range = {0, 100},
+   Increment = 10,
+   Suffix = "%",
+   CurrentValue = 100,
+   Flag = "Slider1",
+   Callback = function(Value)
+   Miteduckings.planterssettings[3].growth = (Value / 100) or 1 / 100
+   end,
+})
+
+Planters:CreateToggle({
+   Name = "Auto Plant",
+   CurrentValue = false,
+   Flag = "Toggle1",
+   Callback = function(State)
+Miteduckings.planterssettings[3].enabled = State
+   end,
+})
+
+Combat:CreateSection("Combat Section")
+
+Combat:CreateToggle({
+   Name = "Auto Kill Stump Snail",
+   CurrentValue = false,
+   Flag = "Toggle1",
+   Callback = function(State)
+Miteduckings.toggles.trainsnail = State
+fd = game.Workspace.FlowerZones['Stump Field'] 
+if State then api.humanoidrootpart().CFrame = CFrame.new(fd.Position.X, fd.Position.Y-10, fd.Position.Z)
+else
+api.humanoidrootpart().CFrame = CFrame.new(fd.Position.X, fd.Position.Y+2, fd.Position.Z) 
+end
+   end,
+})
+
+Combat:CreateToggle({
+   Name = "Auto Kill Coconut Crab",
+   CurrentValue = false,
+   Flag = "Toggle1",
+   Callback = function(State)
+   if State then api.teleport(CFrame.new(-375, 110, 535))
+task.wait(5)
+api.humanoidrootpart().CFrame = CFrame.new(-256, 110, 475) 
+end
+cocopad.CanCollide = State Miteduckings.toggles.traincrab = State
+   end,
+})
+
+Combat:CreateToggle({
+   Name = "Auto Kill Mondo Chick",
+   CurrentValue = false,
+   Flag = "Toggle1",
+   Callback = function(State)
+Miteduckings.toggles.killmondo = State
+   end,
+})
+
+Combat:CreateToggle({
+   Name = "Auto Kill Wild Windy Bee",
+   CurrentValue = false,
+   Flag = "Toggle1",
+   Callback = function(State)
+Miteduckings.toggles.killwindy = State
+   end,
+})
+
+Combat:CreateToggle({
+   Name = "Auto Kill Rogue Vicious Bee",
+   CurrentValue = false,
+   Flag = "Toggle1",
+   Callback = function(State)
+Miteduckings.toggles.killvicious = State
+   end,
+})
+
+Combat:CreateToggle({
+   Name = "Auto Kill Mobs",
+   CurrentValue = false,
+   Flag = "Toggle1",
+   Callback = function(State)
+Miteduckings.toggles.autokillmobs = State
+   end,
+})
+
+Combat:CreateToggle({
+   Name = "Avoid Mobs",
+   CurrentValue = false,
+   Flag = "Toggle1",
+   Callback = function(State)
+Miteduckings.toggles.avoidmobs = State
+   end,
+})
+
+Combat:CreateSection("Auto Kill Mobs Settings")
+
+Combat:CreateInput({
+   Name = "Kill Mobs After Convertions",
+   PlaceholderText = "Enter Value Here",
+   RemoveTextAfterFocusLost = false,
+   Callback = function(Value)
+   Miteduckings.vars.monstertimer = tonumber(Value)
+   end,
+})
+
+Character:CreateSection("Misc Section")
+
+Character:CreateSlider({
+   Name = "Walk Speed",
+   Range = {0, 120},
+   Increment = 1,
+   Suffix = "Studs",
+   CurrentValue = 70,
+   Flag = "Slider1",
+   Callback = function(Value)
+   Miteduckings.vars.walkspeed = Value
+   end,
+})
+
+Character:CreateToggle({
+   Name = "Walk Speed",
+   CurrentValue = false,
+   Flag = "Toggle1",
+   Callback = function(State)
+Miteduckings.toggles.loopspeed = State
+   end,
+})
+
+Character:CreateSlider({
+   Name = "Jump Power",
+   Range = {0, 120},
+   Increment = 1,
+   Suffix = "Studs",
+   CurrentValue = 70,
+   Flag = "Slider1",
+   Callback = function(Value)
+   Miteduckings.vars.jumppower = Value
+   end,
+})
+
+Character:CreateToggle({
+   Name = "Jump Power",
+   CurrentValue = false,
+   Flag = "Toggle1",
+   Callback = function(State)
+Miteduckings.toggles.loopjump = State
+   end,
+})
+
+Character:CreateToggle({
+   Name = "Godmode",
+   CurrentValue = false,
+   Flag = "Toggle1",
+   Callback = function(State)
+Miteduckings.toggles.godmode = State 
+if State then bssapi:Godmode(true)
+else 
+bssapi:Godmode(false)
+end
+   end,
+})
+
+Character:CreateButton({
+   Name = "Invisibility",
+   Callback = function(State)
+    api.teleport(CFrame.new(0,0,0))
+    wait(1)
+    if game.Players.LocalPlayer.Character:FindFirstChild('LowerTorso')
+    then
+    Root = game.Players.LocalPlayer.Character.LowerTorso.Root:Clone() 
+    game.Players.LocalPlayer.Character.LowerTorso.Root:Destroy()
+    Root.Parent = game.Players.LocalPlayer.Character.LowerTorso
+    api.teleport(game:GetService("Players").LocalPlayer.SpawnPos.Value)
+    end
+   end,
+})
+
+Character:CreateToggle({
+   Name = "Float",
+   CurrentValue = false,
+   Flag = "Toggle1",
+   Callback = function(State)
+temptable.float = State
+   end,
+})
+
+Teleports:CreateDropdown({
+   Name = "Field Teleports",
+   Options = fieldstable,
+   CurrentOption = fieldstable[1],
+   Flag = "Dropdown1",
+   Callback = function(Option)
+   game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = game:GetService("Workspace").FlowerZones:FindFirstChild(Option).CFrame
+   end,
+})
+
+Teleports:CreateDropdown({
+   Name = "Monster Teleports",
+   Options = spawnerstable,
+   CurrentOption = spawnerstable[1],
+   Flag = "Dropdown1",
+   Callback = function(Option)
+   d = game:GetService("Workspace").MonsterSpawners:FindFirstChild(Option) game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(d.Position.X, d.Position.Y+3, d.Position.Z)
+   end,
+})
+
+Teleports:CreateDropdown({
+   Name = "Other Teleports",
+   Options = toystable,
+   CurrentOption = toystable[1],
+   Flag = "Dropdown1",
+   Callback = function(Option)
+   d = game:GetService("Workspace").Toys:FindFirstChild(Option).Platform game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(d.Position.X, d.Position.Y+3, d.Position.Z)
+   end,
+})
+
+Teleports:CreateButton({
+   Name = "Teleport To Hive",
+   Callback = function()
+   game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = game:GetService("Players").LocalPlayer.SpawnPos.Value
+   end,
+})
+
+Hive:CreateSection("Hive Position & Feed Section")
+
+Hive:CreateInput({
+   Name = "X",
+   PlaceholderText = "Enter Value Here",
+   RemoveTextAfterFocusLost = false,
+   Callback = function(Value)
+   Miteduckings.beessettings.general.x = Value
+   end,
+})
+
+Hive:CreateInput({
+   Name = "Y",
+   PlaceholderText = "Enter Value Here",
+   RemoveTextAfterFocusLost = false,
+   Callback = function(Value)
+   Miteduckings.beessettings.general.y = Value
+   end,
+})
+
+Hive:CreateInput({
+   Name = "Amount",
+   PlaceholderText = "Enter Amount Here",
+   RemoveTextAfterFocusLost = false,
+   Callback = function(Value)
+   Miteduckings.beessettings.general.amount = tonumber(Value) or 1
+   end,
+
+})
+
+Hive:CreateDropdown({
+   Name = "Select Food",
+   Options = {"Treat", "SunflowerSeed", "Blueberry", "Strawberry", "Bitterberry", "Pineapple"},
+   CurrentOption = "Treat",
+   Flag = "Dropdown1",
+   Callback = function(Option)
+   Miteduckings.beessettings.foodtype = Option
+   end,
+})
+
+Hive:CreateToggle({
+   Name = "Auto Feed",
+   CurrentValue = false,
+   Flag = "Toggle1",
+   Callback = function(State)
+Miteduckings.beessettings.af = State
+   end,
+})
+
+Hive:CreateToggle({
+   Name = "Auto Feed Until Gifted",
+   CurrentValue = false,
+   Flag = "Toggle1",
+   Callback = function(State)
+Miteduckings.beessettings.ugb = State if not State
+then game:GetService("Players").LocalPlayer.PlayerGui.ScreenGui.BeePopUp.TypeName.Text = ""
+end
+   end,
+})
+
+Hive:CreateButton({
+   Name = "Feed Selected Bee [Manual]",
+   Callback = function()
+   temptable.feed(Miteduckings.beessettings.general.x, Miteduckings.beessettings.general.y, Miteduckings.beessettings.foodtype, Miteduckings.beessettings.general.amount)
+   end,
+})
+
+Hive:CreateButton({
+   Name = "Feed All Bees [Manual]",
+   Callback = function()
+    for xbee = 1, 5, 1 do
+        for ybee = 1, 10, 1 do
+            temptable.feed(xbee, ybee, Miteduckings.beessettings.foodtype, Miteduckings.beessettings.general.amount)
+        end
+    end
+   end,
+})
+
+Hive:CreateSection("Auto Feed Royal Jelly Section")
+
+Hive:CreateDropdown({
+   Name = "Select Bee",
+   Options = beestable,
+   CurrentOption = beestable[1],
+   Flag = "Dropdown1",
+   Callback = function(Value)
+   Miteduckings.beessettings.usb = Value
+   end,
+})
+
+Hive:CreateToggle({
+   Name = "Until Selected Bee",
+   CurrentValue = false,
+   Flag = "Toggle1",
+   Callback = function(State)
+Miteduckings.beessettings.usbtoggle = State if not State 
+then game:GetService("Players").LocalPlayer.PlayerGui.ScreenGui.BeePopUp.TypeName.Text = ""
+end
+   end,
+})
+
+Hive:CreateSection("Auto Mutation Rolling Section")
+
+Hive:CreateDropdown({
+   Name = "Select Mutation",
+   Options = {"Convert Amount", "Gather Amount", "Ability Rate", "Attack", "Energy"},
+   CurrentOption = "Convert Amount",
+   Flag = "Dropdown1",
+   Callback = function(Option)
+   Miteduckings.beessettings.mutation = Option
+   end,
+})
+
+Hive:CreateToggle({
+   Name = "Roll Until Selected Selected",
+   CurrentValue = false,
+   Flag = "Toggle1",
+   Callback = function(State)
+Miteduckings.beessettings.umb = State if not State 
+then game:GetService("Players").LocalPlayer.PlayerGui.ScreenGui.BeePopUp.MutationFrame.MutationLabel.Text.Text = ""
+end
+   end,
+})
+
+Misc:CreateSection("Misc Section")
+
+Misc:CreateButton({
+   Name = "Ant Challenge Semi-Godmode",
+   Callback = function()
+    api.tween(1, CFrame.new(93.4228, 32.3983, 553.128))
+    task.wait(1)
+    game.ReplicatedStorage.Events.ToyEvent:FireServer("Ant Challenge") 
+    game.Players.LocalPlayer.Character.HumanoidRootPart.Position = Vector3.new(93.4228, 42.3983, 553.128) 
+    task.wait(2)
+    game.Players.LocalPlayer.Character.Humanoid.Name = 1 
+    local l = game.Players.LocalPlayer.Character["1"]:Clone()
+    l.Parent = game.Players.LocalPlayer.Character
+    l.Name = "Humanoid" 
+    task.wait() 
+    game.Players.LocalPlayer.Character["1"]:Destroy()
+    api.tween(1, CFrame.new(93.4228, 32.3983, 553.128))
+    task.wait(8)
+    api.tween(1, CFrame.new(93.4228, 32.3983, 553.128))
+   end,
+})
+
+Misc:CreateToggle({
+   Name = "Always Visual Night",
+   CurrentValue = false,
+   Flag = "Toggle1",
+   Callback = function(State)
+Miteduckings.toggles.visualnight = State
+   end,
+})
+
+Misc:CreateSection("Glider Section")
+
+Misc:CreateInput({
+   Name = "Glider Speed",
+   PlaceholderText = "Enter Value Here",
+   RemoveTextAfterFocusLost = false,
+   Callback = function(Value)
+local StatCache = require(game.ReplicatedStorage.ClientStatCache)
+local stats = StatCache:Get() stats.EquippedParachute = "Glider" 
+local module = require(game:GetService("ReplicatedStorage").Parachutes)
+local st = module.GetStat 
+local glidersTable = getupvalues(st) glidersTable[1]["Glider"].Speed = Value 
+setupvalue(st, st[1]'Glider', glidersTable)
+   end,
+})
+
+Misc:CreateInput({
+   Name = "Glider Float",
+   PlaceholderText = "Enter Value Here",
+   RemoveTextAfterFocusLost = false,
+   Callback = function(Value)
+local StatCache = require(game.ReplicatedStorage.ClientStatCache) 
+local stats = StatCache:Get() stats.EquippedParachute = "Glider"
+local module = require(game:GetService("ReplicatedStorage").Parachutes) 
+local st = module.GetStat 
+local glidersTable = getupvalues(st) glidersTable[1]["Glider"].Float = Value 
+setupvalue(st, st[1]'Glider', glidersTable)
+   end,
+})
+
+Misc:CreateSection("Auto Use Section")
+
+Misc:CreateToggle({
+   Name = "Auto Use Red Extract",
+   CurrentValue = false,
+   Flag = "Toggle1",
+   Callback = function(State)
+Miteduckings.AutoUseSettings['Red Extract'] = State
+   end,
+})
+
+Misc:CreateToggle({
+   Name = "Auto Use Blue Extract",
+   CurrentValue = false,
+   Flag = "Toggle1",
+   Callback = function(State)
+Miteduckings.AutoUseSettings['Blue Extract'] = State
+   end,
+})
+
+Misc:CreateToggle({
+   Name = "Auto Use Glitter",
+   CurrentValue = false,
+   Flag = "Toggle1",
+   Callback = function(State)
+Miteduckings.AutoUseSettings['Glitter'] = State
+   end,
+})
+
+Misc:CreateToggle({
+   Name = "Auto Use Glue",
+   CurrentValue = false,
+   Flag = "Toggle1",
+   Callback = function(State)
+Miteduckings.AutoUseSettings['Glue'] = State
+   end,
+})
+
+Misc:CreateToggle({
+   Name = "Auto Use Oil",
+   CurrentValue = false,
+   Flag = "Toggle1",
+   Callback = function(State)
+Miteduckings.AutoUseSettings['Oil'] = State
+   end,
+})
+
+Misc:CreateToggle({
+   Name = "Auto Use Enzymes",
+   CurrentValue = false,
+   Flag = "Toggle1",
+   Callback = function(State)
+Miteduckings.AutoUseSettings['Enzymes'] = State
+   end,
+})
+
+Misc:CreateToggle({
+   Name = "Auto Use Tropical Drink",
+   CurrentValue = false,
+   Flag = "Toggle1",
+   Callback = function(State)
+Miteduckings.AutoUseSettings['Tropical Drink'] = State
+   end,
+})
+
+Misc:CreateToggle({
+   Name = "Auto Use Purple Potion",
+   CurrentValue = false,
+   Flag = "Toggle1",
+   Callback = function(State)
+Miteduckings.AutoUseSettings['Purple Potion'] = State
+   end,
+})
+
+Misc:CreateToggle({
+   Name = "Auto Use Super Smoothie",
+   CurrentValue = false,
+   Flag = "Toggle1",
+   Callback = function(State)
+Miteduckings.AutoUseSettings['Super Smoothie'] = State
+   end,
+})
+
+Misc:CreateSection("Game Optimization Section")
+
+Misc:CreateButton({
+   Name = "Boost FPS",
+   Callback = function()
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/Miteduckingss/Mite-Hub/main/Utilities/Bee%20Swarm%20Simulator/FPSBoost.lua"))()
+   end,
+})
+
+Misc:CreateButton({
+   Name = "Destroy Decals",
+   Callback = function()
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/Miteduckingss/Mite-Hub/main/Utilities/Bee%20Swarm%20Simulator/DestroyDecals.lua"))()
+   end,
+})
+
+Misc:CreateButton({
+   Name = "Hide Nickname",
+   Callback = function()
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/Miteduckingss/Mite-Hub/main/Utilities/Bee%20Swarm%20Simulator/NicknameSpoofer.lua"))()
+   end,
+})
+
+Misc:CreateToggle({
+   Name = "Disable 3D Render",
+   CurrentValue = false,
+   Flag = "Toggle1",
+   Callback = function(State)
+game:GetService("RunService"):Set3dRenderingEnabled(not State)
+   end,
+})
+
+Misc:CreateToggle({
+   Name = "Disable 3D Render On Unfocus",
+   CurrentValue = false,
+   Flag = "Toggle1",
+   Callback = function(State)
+Miteduckings.toggles.disablerender = State
+   end,
+})
+
+Misc:CreateSection("Wind Shrine Section")
+
+Misc:CreateDropdown({
+   Name = "Select Item",
+   Options = temptable.item_names,
+   CurrentOption = temptable.item_names[1],
+   Flag = "Dropdown1",
+   Callback = function(Option)
+   Miteduckings.vars.donatit[1] = Option
+   end,
+})
+
+Misc:CreateInput({
+   Name = "Count",
+   PlaceholderText = "Enter Value Here",
+   RemoveTextAfterFocusLost = false,
+   Callback = function(Value)
+Miteduckings.vars.donatit[2] = tonumber(Value)
+   end,
+})
+
+Misc:CreateToggle({
+   Name = "Auto Donate",
+   CurrentValue = false,
+   Flag = "Toggle1",
+   Callback = function(State)
+Miteduckings.toggles.autodonate = State
+   end,
+})
+
+Misc:CreateToggle({
+   Name = "Don't Spawn Drop On Donate",
+   CurrentValue = false,
+   Flag = "Toggle1",
+   Callback = function(State)
+Miteduckings.toggles.donotdonatedrop = State
+   end,
+})
+
+Misc:CreateButton({
+   Name = "Donate",
+   Callback = function()
+    game.ReplicatedStorage.Events.WindShrineDonation:InvokeServer(Miteduckings.vars.donatit[1],
+    Miteduckings.vars.donatit[2])
+    if not Miteduckings.toggles.donotdonatedrop
+    then 
+    game.ReplicatedStorage.Events.WindShrineTrigger:FireServer() 
+    end
+   end,
+})
+
+Misc:CreateButton({
+   Name = "Spawn Drop",
+   Callback = function()
+    game.ReplicatedStorage.Events.WindShrineTrigger:FireServer()
+   end,
+})
+
+Misc:CreateSection("Other Section")
+
+Misc:CreateDropdown({
+   Name = "Equip Accesories",
+   Options = accesoriestable,
+   CurrentOption = accesoriestable[1],
+   Flag = "Dropdown1",
+   Callback = function(Option)
+   local ohString1 = "Equip" 
+   local ohTable2 = { 
+       ["Mute"] = false,
+       ["Type"] = Option,
+       ["Category"] = "Accessory" 
+   }
+   game:GetService("ReplicatedStorage").Events.ItemPackageEvent:InvokeServer(ohString1, ohTable2)
+   end,
+})
+
+Misc:CreateDropdown({
+   Name = "Equip Masks",
+   Options = masktable,
+   CurrentOption = masktable[1],
+   Flag = "Dropdown1",
+   Callback = function(Option)
+   local ohString1 = "Equip"
+   local ohTable2 = { 
+       ["Mute"] = false, 
+       ["Type"] = Option,
+       ["Category"] = "Accessory"
+   }
+   game:GetService("ReplicatedStorage").Events.ItemPackageEvent:InvokeServer(ohString1, ohTable2)
+   end,
+})
+
+Misc:CreateDropdown({
+   Name = "Equip Collectors",
+   Options = collectorstable,
+   CurrentOption = collectorstable[1],
+   Flag = "Dropdown1",
+   Callback = function(Option)
+   local ohString1 = "Equip"
+   local ohTable2 = {
+       ["Mute"] = false,
+       ["Type"] = Option,
+       ["Category"] = "Collector" 
+   } 
+   game:GetService("ReplicatedStorage").Events.ItemPackageEvent:InvokeServer(ohString1, ohTable2)
+   end,
+})
+
+Misc:CreateDropdown({
+   Name = "Generate Amulet",
+   Options = {"Supreme Star Amulet", "Diamond Star Amulet", "Gold Star Amulet","Silver Star Amulet","Bronze Star Amulet","Moon Amulet"},
+   CurrentOption = "Supreme Star Amulet",
+   Flag = "Dropdown1",
+   Callback = function(Option)
+   local A_1 = Option.." Generator" 
+   local Event = game:GetService("ReplicatedStorage").Events.ToyEvent Event:FireServer(A_1)
+   end,
+})
+
+Misc:CreateButton({
+   Name = "Export Stats Table",
+   Callback = function()
+    local StatCache = require(game.ReplicatedStorage.ClientStatCache)writefile("Stats_"..api.nickname..".json", StatCache:Encode())
+   end,
+})
+
+Misc:CreateInput({
+   Name = "Ping Spoofer",
+   PlaceholderText = "Enter Value Here",
+   RemoveTextAfterFocusLost = false,
+   Callback = function(Option)
+ settings():GetService("NetworkSettings").IncomingReplicationLag = tonumber(Option)/1000 or 0
+   end,
+})
+
+Settings:CreateSection("Autofarm Settings Section")
+
+Settings:CreateToggle({
+   Name = "Randomize Speed On Autofarming",
+   CurrentValue = false,
+   Flag = "Toggle1",
+   Callback = function(State)
+Miteduckings.toggles.randomizespeed = State
+   end,
+})
+
+Settings:CreateToggle({
+   Name = "Don't Walk In Field",
+   CurrentValue = false,
+   Flag = "Toggle1",
+   Callback = function(State)
+Miteduckings.toggles.farmflower = State
+   end,
+})
+
+Settings:CreateToggle({
+   Name = "Convert Hive Balloon",
+   CurrentValue = false,
+   Flag = "Toggle1",
+   Callback = function(State)
+Miteduckings.toggles.convertballoons = State
+   end,
+})
+
+Settings:CreateToggle({
+   Name = "Don't Convert",
+   CurrentValue = false,
+   Flag = "Toggle1",
+   Callback = function(State)
+Miteduckings.toggles.donotconvert = State
+   end,
+})
+
+Settings:CreateToggle({
+   Name = "Don't Farm Tokens",
+   CurrentValue = false,
+   Flag = "Toggle1",
+   Callback = function(State)
+Miteduckings.toggles.donotfarmtokens = State
+   end,
+})
+
+Settings:CreateToggle({
+   Name = "Enable Token Blacklisting",
+   CurrentValue = false,
+   Flag = "Toggle1",
+   Callback = function(State)
+Miteduckings.toggles.enabletokenblacklisting = State
+   end,
+})
+
+Settings:CreateSection("Auto Dispenser Settings Section")
+
+Settings:CreateToggle({
+   Name = "Royal Jelly Dispenser",
+   CurrentValue = false,
+   Flag = "Toggle1",
+   Callback = function(State)
+Miteduckings.dispensesettings.rj = not Miteduckings.dispensesettings.rj
+   end,
+})
+
+Settings:CreateToggle({
+   Name = "Blueberry Dispenser",
+   CurrentValue = false,
+   Flag = "Toggle1",
+   Callback = function(State)
+Miteduckings.dispensesettings.blub = not Miteduckings.dispensesettings.blub
+   end,
+})
+
+Settings:CreateToggle({
+   Name = "Strawberry Dispenser",
+   CurrentValue = false,
+   Flag = "Toggle1",
+   Callback = function(State)
+Miteduckings.dispensesettings.straw = not Miteduckings.dispensesettings.straw
+   end,
+})
+
+Settings:CreateToggle({
+   Name = "Treat Dispenser",
+   CurrentValue = false,
+   Flag = "Toggle1",
+   Callback = function(State)
+Miteduckings.dispensesettings.treat = not Miteduckings.dispensesettings.treat
+   end,
+})
+
+Settings:CreateToggle({
+   Name = "Coconut Dispenser",
+   CurrentValue = false,
+   Flag = "Toggle1",
+   Callback = function(State)
+Miteduckings.dispensesettings.coconut = not Miteduckings.dispensesettings.coconut
+   end,
+})
+
+Settings:CreateToggle({
+   Name = "Glue Dispenser",
+   CurrentValue = false,
+   Flag = "Toggle1",
+   Callback = function(State)
+Miteduckings.dispensesettings.glue = not Miteduckings.dispensesettings.glue
+   end,
+})
+
+Settings:CreateSection("Auto Boosters Settings Section")
+
+Settings:CreateToggle({
+   Name = "Mountain Top Booster",
+   CurrentValue = false,
+   Flag = "Toggle1",
+   Callback = function(State)
+Miteduckings.dispensesettings.white = not Miteduckings.dispensesettings.white
+   end,
+})
+
+Settings:CreateToggle({
+   Name = "Blue Field Booster",
+   CurrentValue = false,
+   Flag = "Toggle1",
+   Callback = function(State)
+Miteduckings.dispensesettings.blue = not Miteduckings.dispensesettings.blue
+   end,
+})
+
+Settings:CreateToggle({
+   Name = "Red Field Booster",
+   CurrentValue = false,
+   Flag = "Toggle1",
+   Callback = function(State)
+Miteduckings.dispensesettings.red = not Miteduckings.dispensesettings.red
+   end,
+})
+
+Settings:CreateSection("Fields Settings Section")
+
+Settings:CreateDropdown({
+   Name = "Best White Field",
+   Options = temptable.whitefields,
+   CurrentOption = temptable.whitefields[1],
+   Flag = "Dropdown1",
+   Callback = function(Option)
+   Miteduckings.bestfields.white = Option
+   end,
+})
+
+Settings:CreateDropdown({
+   Name = "Best Red Field",
+   Options = temptable.redfields,
+   CurrentOption = temptable.redfields[1],
+   Flag = "Dropdown1",
+   Callback = function(Option)
+   Miteduckings.bestfields.red = Option
+   end,
+})
+
+Settings:CreateDropdown({
+   Name = "Best Blue Field",
+   Options = temptable.bluefields,
+   CurrentOption = temptable.bluefields[1],
+   Flag = "Dropdown1",
+   Callback = function(Option)
+   Miteduckings.bestfields.blue = Option
+   end,
+})
+
+Settings:CreateSection("Auto Quest Settings Section")
+
+Settings:CreateDropdown({
+   Name = "Do NPC Quests",
+   Options = {"All Quests", "Bucko Bee", "Brown Bear", "Riley Bee", "Polar Bear"},
+   CurrentOption = "All Quests",
+   Flag = "Dropdown1",
+   Callback = function(Option)
+   Miteduckings.vars.npcprefer = Option
+   end,
+})
+
+Settings:CreateToggle({
+   Name = "Teleport To NPC",
+   CurrentValue = false,
+   Flag = "Toggle1",
+   Callback = function(State)
+Miteduckings.toggles.tptonpc = State
+   end,
+})
+
+Information:CreateSection("Credits")
+
+Information:CreateParagraph({Title = "Creator", Content = "mite#6873"})
+
+Information:CreateParagraph({Title = "Rayfield Lib Creator", Content = "UI-Interface (https://github.com/shlexware)"})
+
+Information:CreateSection("Changelog")
+
+Rayfield:LoadConfiguration()
+
+task.spawn(function() while task.wait() do
+    if Miteduckings.toggles.autofarm then
+        if Miteduckings.toggles.farmflame then getflame() end
+        if Miteduckings.toggles.farmglitchedtokens then getglitchtoken() end
+    end
+end end)
+
+game.Workspace.Particles.ChildAdded:Connect(function(v)
+    if not temptable.started.vicious and not temptable.started.ant then
+        if v.Name == "WarningDisk" and not temptable.started.vicious and Miteduckings.toggles.autofarm and not temptable.started.ant and Miteduckings.toggles.farmcoco and (v.Position-api.humanoidrootpart().Position).magnitude < temptable.magnitude and not temptable.converting then
+            table.insert(temptable.coconuts, v)
+            getcoco(v)
+            gettoken()
+        elseif v.Name == "Crosshair" then
+            task.wait(.2)
+            if v ~= nil and v.BrickColor ~= BrickColor.new("Forest green") and not temptable.started.ant and v.BrickColor ~= BrickColor.new("Flint") and (v.Position-api.humanoidrootpart().Position).magnitude < temptable.magnitude and Miteduckings.toggles.autofarm and Miteduckings.toggles.collectcrosshairs and not temptable.converting then
+                if #temptable.crosshairs <= 3 then
+                    table.insert(temptable.crosshairs, v)
+                    getcrosshairs(v)
+                    gettoken()
+                end
+            end
+        elseif v.Name == "DustBunnyInstance" then
+            task.wait(.1)
+            if v:FindFirstChild("Plane") then
+                if Miteduckings.toggles.farmfuzzy and Miteduckings.toggles.autofarm and tonumber((v.Plane.Position-game.Players.LocalPlayer.Character.HumanoidRootPart.Position).magnitude) < temptable.magnitude/1.4 then
+                    table.insert(temptable.FuzzyBombs, v)
+                    getfuzzy(v)
+                end
+            end
+        end
+    end
+end)
+
+game.Workspace.Particles.Snowflakes.ChildAdded:Connect(function(Object)
+    if Miteduckings.toggles.farmsnowflakes and temptable.collecting.snowflake == false then farmsnowflakes(Object) end
+end)
+
+task.spawn(function() while task.wait(5) do
+    UseDispensers()
+end end)
+
+task.spawn(function() while task.wait(1) do
+    if Miteduckings.toggles.automasks and api.humanoidrootpart() then
+        if findFieldWithRay(api.humanoidrootpart().Position, Vector3.new(0,-90,0)) then
+            local MaskField = findFieldWithRay(api.humanoidrootpart().Position, Vector3.new(0,-90,0))
+            local FieldColor
+            if MaskField:FindFirstChild("ColorGroup") then FieldColor = MaskField:FindFirstChild("ColorGroup").Value else FieldColor = 'White' end
+            if temptable.LastFieldColor == FieldColor then continue end
+            temptable.LastFieldColor = FieldColor
+            if FieldColor == 'Blue' then
+                maskequip('Bubble Mask')
+                maskequip('Diamond Mask')
+            elseif FieldColor == 'Red' then
+                maskequip('Fire Mask')
+                maskequip('Demon Mask')
+            else
+                maskequip('Honey Mask')
+                maskequip('Gummy Mask')
+            end
+        end
+    end
+end end)
+
+task.spawn(function() while task.wait() do
+    if temptable.collecting.tickets then continue end
+    if temptable.collecting.rares then continue end
+    if Miteduckings.toggles.autofarm then
+        temptable.magnitude = 70
+        if game.Players.LocalPlayer.Character:FindFirstChild("ProgressLabel",true) then
+        local pollenprglbl = game.Players.LocalPlayer.Character:FindFirstChild("ProgressLabel",true)
+        maxpollen = tonumber(pollenprglbl.Text:match("%d+$"))
+        local pollencount = game.Players.LocalPlayer.CoreStats.Pollen.Value
+        pollenpercentage = pollencount/maxpollen*100
+        fieldselected = game:GetService("Workspace").FlowerZones[Miteduckings.vars.field]
+        if Miteduckings.toggles.autodoquest then
+            if game:GetService("Players").LocalPlayer.PlayerGui.ScreenGui.Menus.Children.Quests.Content:FindFirstChild("Frame") then
+                for i,v in next, game:GetService("Players").LocalPlayer.PlayerGui.ScreenGui.Menus.Children.Quests:GetDescendants() do
+                    if v.Name == "Description" then
+                        if string.match(v.Parent.Parent.TitleBar.Text, Miteduckings.vars.npcprefer) or Miteduckings.vars.npcprefer == "All Quests" and not string.find(v.Text, "Puffshroom") then
+                            pollentypes = {"White Pollen", "Red Pollen", "Blue Pollen", "Blue Flowers", "Red Flowers", "White Flowers"}
+                            text = v.Text
+                            if api.returnvalue(fieldstable, text) and not string.find(v.Text, "Complete!") and not api.findvalue(Miteduckings.blacklistedfields, api.returnvalue(fieldstable, text)) then
+                                d = api.returnvalue(fieldstable, text)
+                                fieldselected = game:GetService("Workspace").FlowerZones[d]
+                                break
+                            elseif api.returnvalue(pollentypes, text) and not string.find(v.Text, 'Complete!') then
+                                d = api.returnvalue(pollentypes, text)
+                                if d == "Blue Flowers" or d == "Blue Pollen" then
+                                    fieldselected = game:GetService("Workspace").FlowerZones[Miteduckings.bestfields.blue]
+                                    break
+                                elseif d == "White Flowers" or d == "White Pollen" then
+                                    fieldselected = game:GetService("Workspace").FlowerZones[Miteduckings.bestfields.white]
+                                    break
+                                elseif d == "Red Flowers" or d == "Red Pollen" then
+                                    fieldselected = game:GetService("Workspace").FlowerZones[Miteduckings.bestfields.red]
+                                    break
+                                end
+                            end
+                        end
+                    end
+                end
+            else
+   Rayfield:Notify({
+   Title = "Mite Hub | Auto Quest Error",
+   Content = "You have autoquest enabled, but quests tab is closed. Please open it.",
+   Duration = 5,
+   Image = 4483362458,
+   Actions = {
+      Ignore = {
+         Name = "Okay!",
+         Callback = function()
+         print(":D")
+      end
+   },
+},
+})
+            end
+        else
+            fieldselected = game:GetService("Workspace").FlowerZones[Miteduckings.vars.field]
+        end
+        fieldpos = CFrame.new(fieldselected.Position.X, fieldselected.Position.Y+3, fieldselected.Position.Z)
+        fieldposition = fieldselected.Position
+        if temptable.sprouts.detected and temptable.sprouts.coords and Miteduckings.toggles.farmsprouts then
+            fieldposition = temptable.sprouts.coords.Position
+            fieldpos = temptable.sprouts.coords
+        end
+        if Miteduckings.toggles.farmpuffshrooms and game.Workspace.Happenings.Puffshrooms:FindFirstChildOfClass("Model") then 
+            if api.partwithnamepart("Mythic", game.Workspace.Happenings.Puffshrooms) then
+                temptable.magnitude = 25 
+                fieldpos = api.partwithnamepart("Mythic", game.Workspace.Happenings.Puffshrooms):FindFirstChild("Puffball Stem").CFrame
+                fieldposition = fieldpos.Position
+            elseif api.partwithnamepart("Legendary", game.Workspace.Happenings.Puffshrooms) then
+                temptable.magnitude = 25 
+                fieldpos = api.partwithnamepart("Legendary", game.Workspace.Happenings.Puffshrooms):FindFirstChild("Puffball Stem").CFrame
+                fieldposition = fieldpos.Position
+            elseif api.partwithnamepart("Epic", game.Workspace.Happenings.Puffshrooms) then
+                temptable.magnitude = 25 
+                fieldpos = api.partwithnamepart("Epic", game.Workspace.Happenings.Puffshrooms):FindFirstChild("Puffball Stem").CFrame
+                fieldposition = fieldpos.Position
+            elseif api.partwithnamepart("Rare", game.Workspace.Happenings.Puffshrooms) then
+                temptable.magnitude = 25 
+                fieldpos = api.partwithnamepart("Rare", game.Workspace.Happenings.Puffshrooms):FindFirstChild("Puffball Stem").CFrame
+                fieldposition = fieldpos.Position
+            else
+                temptable.magnitude = 25 
+                fieldpos = api.getbiggestmodel(game.Workspace.Happenings.Puffshrooms):FindFirstChild("Puffball Stem").CFrame
+                fieldposition = fieldpos.Position
+            end
+        end
+        if tonumber(pollenpercentage) < tonumber(Miteduckings.vars.convertat) or Miteduckings.toggles.donotconvert then
+            if not temptable.tokensfarm then
+                api.tween(1, fieldpos)
+                temptable.tokensfarm = true
+                if Miteduckings.toggles.autosprinkler then makesprinklers() end
+            else
+                if Miteduckings.toggles.killmondo then
+                    while Miteduckings.toggles.killmondo and game.Workspace.Monsters:FindFirstChild("Mondo Chick (Lvl 8)") and not temptable.started.vicious and not temptable.started.monsters do
+                        temptable.started.mondo = true
+                        while game.Workspace.Monsters:FindFirstChild("Mondo Chick (Lvl 8)") do
+                            disableall()
+                            game:GetService("Workspace").Map.Ground.HighBlock.CanCollide = false 
+                            temptable.MondoPosition = game.Workspace.Monsters["Mondo Chick (Lvl 8)"].Head.Position
+                            api.tweenNoDelay(0.1, CFrame.new(temptable.MondoPosition.x, temptable.MondoPosition.y - 55, temptable.MondoPosition.z))
+                            task.wait(1)
+                            temptable.float = true
+                        end
+                        temptable.MondoCollectTokens = true
+                        task.wait(.5) game:GetService("Workspace").Map.Ground.HighBlock.CanCollide = true temptable.float = false api.teleport(game.Workspace.FlowerZones['Mountain Top Field'].CFrame) task.wait(1) api.teleport(game.Workspace.FlowerZones['Mountain Top Field'].CFrame)       
+                        for i = 0, 50 do 
+                            gettoken(CFrame.new(73.2, 176.35, -167).Position) 
+                        end 
+                        temptable.MondoCollectTokens = false
+                        enableall() 
+                        api.tween(2, fieldpos) 
+                        temptable.started.mondo = false
+                    end
+                end
+                if (fieldposition-game.Players.LocalPlayer.Character.HumanoidRootPart.Position).magnitude > temptable.magnitude then
+                    api.teleport(fieldpos)
+                    if Miteduckings.toggles.autosprinkler then makesprinklers() end
+                end
+                getprioritytokens()
+                if Miteduckings.toggles.avoidmobs then avoidmob() end
+                if Miteduckings.toggles.farmclosestleaf then closestleaf() end
+                if Miteduckings.toggles.farmbubbles then getbubble() end
+                if Miteduckings.toggles.farmclouds then getcloud() end
+                if not Miteduckings.toggles.donotfarmtokens and done then getlinktoken() gettoken() end
+                if not Miteduckings.toggles.farmflower then getflower() end
+            end
+        elseif tonumber(pollenpercentage) >= tonumber(Miteduckings.vars.convertat) then
+            temptable.tokensfarm = false
+            api.tween(1, game:GetService("Players").LocalPlayer.SpawnPos.Value * CFrame.fromEulerAnglesXYZ(0, 110, 0) + Vector3.new(0, 0, 9))
+            temptable.converting = true
+            repeat
+                converthoney()
+            until game.Players.LocalPlayer.CoreStats.Pollen.Value == 0
+            if Miteduckings.toggles.convertballoons and gethiveballoon() then
+                task.wait(6)
+                repeat
+                    task.wait()
+                    converthoney()
+                until gethiveballoon() == false or not Miteduckings.toggles.convertballoons
+            end
+            temptable.converting = false
+            temptable.act = temptable.act + 1
+            task.wait(6)
+            if Miteduckings.toggles.autoant and not game:GetService("Workspace").Toys["Ant Challenge"].Busy.Value and rtsg().Eggs.AntPass > 0 then farmant() end
+            if Miteduckings.toggles.autoquest then makequests() end
+            collectplanters()
+            plantplanters()
+            if Miteduckings.toggles.autokillmobs then 
+                if temptable.act >= Miteduckings.vars.monstertimer then
+                    temptable.started.monsters = true
+                    temptable.act = 0
+                    killmobs() 
+                    temptable.started.monsters = false
+                end
+            end
+        end
+    end
+end end end)
+
+task.spawn(function()
+    while task.wait(1) do
+		if Miteduckings.toggles.killvicious and temptable.detected.vicious and temptable.converting == false and not temptable.started.monsters then
+            temptable.started.vicious = true
+            disableall()
+			local vichumanoid = game:GetService("Players").LocalPlayer.Character.HumanoidRootPart
+			for i,v in next, game.workspace.Particles:GetChildren() do
+				for x in string.gmatch(v.Name, "Vicious") do
+					if string.find(v.Name, "Vicious") then
+						api.tween(1,CFrame.new(v.Position.x, v.Position.y, v.Position.z)) task.wait(1)
+						api.tween(0.5, CFrame.new(v.Position.x, v.Position.y, v.Position.z)) task.wait(.5)
+					end
+				end
+			end
+			for i,v in next, game.workspace.Particles:GetChildren() do
+				for x in string.gmatch(v.Name, "Vicious") do
+                    while Miteduckings.toggles.killvicious and temptable.detected.vicious do task.wait() if string.find(v.Name, "Vicious") then
+                        for i=1, 4 do temptable.float = true vichumanoid.CFrame = CFrame.new(v.Position.x+10, v.Position.y, v.Position.z) task.wait(.3)
+                        end
+                    end end
+                end
+			end
+            enableall()
+			task.wait(1)
+			temptable.float = false
+            temptable.started.vicious = false
+		end
+	end
+end)
+
+task.spawn(function() while task.wait() do
+    if Miteduckings.toggles.killwindy and temptable.detected.windy and not temptable.converting and not temptable.started.vicious and not temptable.started.mondo and not temptable.started.monsters then
+        temptable.started.windy = true
+        wlvl = "" aw = false awb = false 
+        disableall()
+        while Miteduckings.toggles.killwindy and temptable.detected.windy do
+            if not aw then
+                for i,v in pairs(workspace.Monsters:GetChildren()) do
+                    if string.find(v.Name, "Windy") then wlvl = v.Name aw = true 
+                    end
+                end
+            end
+            if aw then
+                for i,v in pairs(workspace.Monsters:GetChildren()) do
+                    if string.find(v.Name, "Windy") then
+                        if v.Name ~= wlvl then
+                            temptable.float = false task.wait(5) for i =1, 5 do gettoken(api.humanoidrootpart().Position) end 
+                            wlvl = v.Name
+                        end
+                    end
+                end
+            end
+            if not awb then api.tween(1,temptable.gacf(temptable.windy, 5)) task.wait(1) awb = true end
+            if awb and temptable.windy.Name == "Windy" then
+                api.humanoidrootpart().CFrame = temptable.gacf(temptable.windy, 25) temptable.float = true task.wait()
+            end
+        end 
+        enableall()
+        temptable.float = false
+        temptable.started.windy = false
+    end
+end end)
+
+task.spawn(function() while task.wait(0.001) do
+  if Miteduckings.toggles.autodig then 
+        if game.Players.LocalPlayer and game.Players.LocalPlayer.Character and game.Players.LocalPlayer.Character:FindFirstChildOfClass("Tool") and game.Players.LocalPlayer.Character:FindFirstChildOfClass('Tool'):FindFirstChild('ClientScriptMouse') then
+            pcall(function()getsenv(game.Players.LocalPlayer.Character:FindFirstChildOfClass('Tool').ClientScriptMouse).collectStart()end)
+        end 
+    end
+end end)
+
+game:GetService("Workspace").Particles.Folder2.ChildAdded:Connect(function(child)
+    if child.Name == "Sprout" then
+        temptable.sprouts.detected = true
+        temptable.sprouts.coords = child.CFrame
+    end
+end)
+game:GetService("Workspace").Particles.Folder2.ChildRemoved:Connect(function(child)
+    if child.Name == "Sprout" then
+        task.wait(30)
+        temptable.sprouts.detected = false
+        temptable.sprouts.coords = ""
+    end
+end)
+
+Workspace.Particles.ChildRemoved:Connect(function(instance)
+    if string.find(instance.Name, "Vicious") then
+        temptable.detected.vicious = false
+    end
+end)
+
+game:GetService("Workspace").NPCBees.ChildRemoved:Connect(function(v)
+    if v.Name == "Windy" then
+        task.wait(3) temptable.windy = nil temptable.detected.windy = false
+    end
+end)
+
+task.spawn(function() while task.wait(.1) do
+    if not temptable.converting then
+        if Miteduckings.toggles.autodonate then
+            game.ReplicatedStorage.Events.WindShrineDonation:InvokeServer(Miteduckings.vars.donatit[1], Miteduckings.vars.donatit[2])
+            if not donotdonatedrop then game.ReplicatedStorage.Events.WindShrineTrigger:FireServer() end
+            for i,v in pairs(game.Workspace.Collectibles:GetChildren()) do
+                if (v.Position-Vector3.new(-484, 142, 413)).magnitude < 35 and v.CFrame.YVector.Y == 1 then
+                    api.humanoidrootpart().CFrame = v.CFrame
+                end
+            end
+        end
+        if Miteduckings.toggles.autosamovar then
+            platformm = game:GetService("Workspace").Toys.Samovar.Platform
+            for i,v in pairs(game.Workspace.Collectibles:GetChildren()) do
+                if (v.Position-platformm.Position).magnitude < 25 and v.CFrame.YVector.Y == 1 then
+                    api.humanoidrootpart().CFrame = v.CFrame
+                end
+            end
+        end
+        if Miteduckings.toggles.autostockings then
+            platformm = game:GetService("Workspace").Toys.Stockings.Platform
+            for i,v in pairs(game.Workspace.Collectibles:GetChildren()) do
+                if (v.Position-platformm.Position).magnitude < 25 and v.CFrame.YVector.Y == 1 then
+                    api.humanoidrootpart().CFrame = v.CFrame
+                end
+            end
+        end
+        if Miteduckings.toggles.autoonettart then
+            platformm = game:GetService("Workspace").Toys["Onett's Lid Art"].Platform
+            for i,v in pairs(game.Workspace.Collectibles:GetChildren()) do
+                if (v.Position-platformm.Position).magnitude < 25 and v.CFrame.YVector.Y == 1 then
+                    api.humanoidrootpart().CFrame = v.CFrame
+                end
+            end
+        end
+        if Miteduckings.toggles.autocandles then
+            platformm = game:GetService("Workspace").Toys["Honeyday Candles"].Platform
+            for i,v in pairs(game.Workspace.Collectibles:GetChildren()) do
+                if (v.Position-platformm.Position).magnitude < 25 and v.CFrame.YVector.Y == 1 then
+                    api.humanoidrootpart().CFrame = v.CFrame
+                end
+            end
+        end
+        if Miteduckings.toggles.autofeast then
+            platformm = game:GetService("Workspace").Toys["Beesmas Feast"].Platform
+            for i,v in pairs(game.Workspace.Collectibles:GetChildren()) do
+                if (v.Position-platformm.Position).magnitude < 25 and v.CFrame.YVector.Y == 1 then
+                    api.humanoidrootpart().CFrame = v.CFrame
+                end
+            end
+        end
+    end
+end end)
+
+task.spawn(function() while task.wait(1) do
+    temptable.honeycurrent = statsget().Totals.Honey
+
+if Miteduckings.toggles.visualnight then
+        game:GetService("Lighting").TimeOfDay = '00:00:00'
+        game:GetService("Lighting").Brightness = 0.03
+        game:GetService("Lighting").ClockTime = 0
+    end
+end end)
+
+game:GetService('RunService').Heartbeat:connect(function() 
+    if Miteduckings.toggles.autoquest then firesignal(game:GetService("Players").LocalPlayer.PlayerGui.ScreenGui.NPC.ButtonOverlay.MouseButton1Click) end
+    if Miteduckings.toggles.loopspeed then game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = Miteduckings.vars.walkspeed end
+    if Miteduckings.toggles.loopjump then game.Players.LocalPlayer.Character.Humanoid.JumpPower = Miteduckings.vars.jumppower end
+end)
+
+game:GetService('RunService').Heartbeat:connect(function()
+    for i,v in next, game.Players.LocalPlayer.PlayerGui.ScreenGui:WaitForChild("MinigameLayer"):GetChildren() do for k,q in next, v:WaitForChild("GuiGrid"):GetDescendants() do if q.Name == "ObjContent" or q.Name == "ObjImage" then q.Visible = true end end end
+end)
+
+game:GetService('RunService').Heartbeat:connect(function() 
+    if temptable.float then 
+        if not setfflag then
+            game.Players.LocalPlayer.Character.Humanoid.BodyTypeScale.Value = 0 
+            floatpad.CanCollide = true 
+            floatpad.CFrame = CFrame.new(game.Players.LocalPlayer.Character.HumanoidRootPart.Position.X, game.Players.LocalPlayer.Character.HumanoidRootPart.Position.Y-3.75, game.Players.LocalPlayer.Character.HumanoidRootPart.Position.Z) task.wait(0)  
+        else
+            api.humanoid():ChangeState(11)
+        end
+    else 
+        if not setfflag then floatpad.CanCollide = false end
+    end
+end)
+
+local vu = game:GetService("VirtualUser")
+game:GetService("Players").LocalPlayer.Idled:connect(function() vu:Button2Down(Vector2.new(0,0),workspace.CurrentCamera.CFrame)task.wait(1)vu:Button2Up(Vector2.new(0,0),workspace.CurrentCamera.CFrame)
+end)
+
+game.Workspace.Collectibles.ChildAdded:Connect(function(token)
+    if Miteduckings.toggles.farmtickets and temptable.collecting.tickets == false then farmtickets(token) end
+    if Miteduckings.toggles.farmrares and temptable.collecting.rares == false then farmrares(token) end
+    if Miteduckings.toggles.traincrab then farmcombattokens(token, CFrame.new(-256, 110, 475), 'crab') end
+    if Miteduckings.toggles.trainsnail then farmcombattokens(token, CFrame.new(game.Workspace.FlowerZones['Stump Field'].Position.X, game.Workspace.FlowerZones['Stump Field'].Position.Y-10, game.Workspace.FlowerZones['Stump Field'].Position.Z), 'snail') end
+    if Miteduckings.toggles.killmondo and not temptable.MondoCollectTokens and temptable.MondoPosition then farmcombattokens(token, CFrame.new(temptable.MondoPosition.x, temptable.MondoPosition.y - 55, temptable.MondoPosition.z), 'mondo') end
+ end)
+
+game.Players.LocalPlayer.CharacterAdded:Connect(function(char)
+    humanoid = char:WaitForChild("Humanoid")
+    humanoid.Died:Connect(function()
+        if Miteduckings.toggles.autofarm then
+            temptable.dead = true
+            Miteduckings.toggles.autofarm = false
+            temptable.converting = false
+            temptable.farmtoken = false
+        end
+        if temptable.dead then
+            task.wait(25)
+            temptable.dead = false
+            Miteduckings.toggles.autofarm = true local player = game.Players.LocalPlayer
+            temptable.converting = false
+            temptable.tokensfarm = true
+        end
+    end)
+end)
+
+game:GetService("Workspace").Particles:FindFirstChild('PopStars').ChildAdded:Connect(function(v)
+    task.wait(.1)
+    if (v.Position-api.humanoidrootpart().Position).magnitude < 15 then
+        temptable.foundpopstar = true
+    end
+end)
+
+game:GetService("Workspace").Particles:FindFirstChild('PopStars').ChildRemoved:Connect(function(v)
+    if (v.Position-api.humanoidrootpart().Position).magnitude < 15 then
+        temptable.foundpopstar = false
+        temptable.float = false
+    end
+end)
+
+for _,v in next, game.Workspace.Collectibles:GetChildren() do
+    if string.find(v.Name,"") then
+        v:Destroy()
+    end
+end 
+
+task.spawn(function() while task.wait() do
+    pos = game.Players.LocalPlayer.Character.HumanoidRootPart.Position
+    task.wait(0.00001)
+    currentSpeed = (pos-game.Players.LocalPlayer.Character.HumanoidRootPart.Position).magnitude
+    if currentSpeed > 0 then
+        temptable.running = true
+    else
+        temptable.running = false
+    end
+end end)
+
+task.spawn(function() while task.wait(15*60+10) do 
+    if Miteduckings.AutoUseSettings['Glitter'] and findFieldWithRay(api.humanoidrootpart().Position, Vector3.new(0, -90, 0)) then
+        game:GetService("ReplicatedStorage").Events.PlayerActivesCommand:FireServer({["Name"] = "Glitter"})
+    end
+    if Miteduckings.AutoUseSettings['Purple Potion'] then
+        game:GetService("ReplicatedStorage").Events.PlayerActivesCommand:FireServer({["Name"] = "Purple Potion"})
+    end
+end end)
+
+task.spawn(function() while task.wait(10*60+10) do
+    if Miteduckings.AutoUseSettings['Blue Extract'] then
+        game:GetService("ReplicatedStorage").Events.PlayerActivesCommand:FireServer({["Name"] = "Blue Extract"})
+    end
+    if Miteduckings.AutoUseSettings['Red Extract'] then
+        game:GetService("ReplicatedStorage").Events.PlayerActivesCommand:FireServer({["Name"] = "Red Extract"})
+    end
+    if Miteduckings.AutoUseSettings['Glue'] then
+        game:GetService("ReplicatedStorage").Events.PlayerActivesCommand:FireServer({["Name"] = "Glue"})
+    end
+    if Miteduckings.AutoUseSettings['Oil'] then
+        game:GetService("ReplicatedStorage").Events.PlayerActivesCommand:FireServer({["Name"] = "Oil"})
+    end
+    if Miteduckings.AutoUseSettings['Enzymes'] then
+        game:GetService("ReplicatedStorage").Events.PlayerActivesCommand:FireServer({["Name"] = "Enzymes"})
+    end
+    if Miteduckings.AutoUseSettings['Tropical Drink'] then
+        game:GetService("ReplicatedStorage").Events.PlayerActivesCommand:FireServer({["Name"] = "Tropical Drink"})
+    end
+end end)
+
+task.spawn(function() while task.wait(20*60+10) do
+    if Miteduckings.AutoUseSettings['Super Smoothie'] then
+        game:GetService("ReplicatedStorage").Events.PlayerActivesCommand:FireServer({["Name"] = "Super Smoothie"})
+    end
+end end)
+
+task.spawn(function() while task.wait(.00000000000000001) do
+    if Miteduckings.beessettings.usbtoggle then
+        if not game:GetService("Players").LocalPlayer.PlayerGui.ScreenGui.BeePopUp.TypeName.Text:match(Miteduckings.beessettings.usb) then
+            temptable.feed(Miteduckings.beessettings.general.x, Miteduckings.beessettings.general.y, "RoyalJelly")
+        end
+    end
+    if Miteduckings.beessettings.ugb then
+        if not game:GetService("Players").LocalPlayer.PlayerGui.ScreenGui.BeePopUp.TypeName.Text:match("Gifted") then
+            temptable.feed(Miteduckings.beessettings.general.x, Miteduckings.beessettings.general.y, Miteduckings.beessettings.foodtype)
+        end
+    end
+    if Miteduckings.beessettings.af then
+        temptable.feed(Miteduckings.beessettings.general.x, Miteduckings.beessettings.general.y, Miteduckings.beessettings.foodtype, Miteduckings.beessettings.general.amount)
+    end
+    if Miteduckings.beessettings.umb then
+        if not game:GetService("Players").LocalPlayer.PlayerGui.ScreenGui.BeePopUp.MutationFrame.MutationLabel.Text:match(Miteduckings.beessettings.mutation) then
+            temptable.feed(Miteduckings.beessettings.general.x, Miteduckings.beessettings.general.y, "Bitterberry", Miteduckings.beessettings.general.amount)
+        end
+    end
+end end)
+
+game:GetService("UserInputService").WindowFocused:Connect(function()
+	if Miteduckings.toggles.disablerender then
+        game:GetService("RunService"):Set3dRenderingEnabled(true)
+    end
+end)
+
+game:GetService("UserInputService").WindowFocusReleased:Connect(function()
+	if Miteduckings.toggles.disablerender then
+        game:GetService("RunService"):Set3dRenderingEnabled(false)
+    end
+end)
+
+for _, Gate in next, workspace.Gates:GetDescendants() do 
+    if Gate:IsA("BasePart") and string.find(Gate.parent.Name, "Bee Gate") then 
+        Gate.CanCollide = false 
+        Gate.Transparency = Gate.Transparency < 0.5 and 0.5 or Gate.Transparency
+        task.wait() 
+    end 
+end
+
+for _, Part in next, workspace:FindFirstChild("FieldDecos"):GetDescendants() do 
+    if Part:IsA("BasePart") then 
+        Part.CanCollide = false 
+        Part.Transparency = Part.Transparency < 0.5 and 0.5 or Part.Transparency 
+        task.wait() 
+    end 
+end
+
+for _, Part in next, workspace:FindFirstChild("Decorations"):GetDescendants() do 
+    if Part:IsA("BasePart") and (Part.Parent.Name == "Bush" or Part.Parent.Name == "Blue Flower") then 
+        Part.CanCollide = false 
+        Part.Transparency = Part.Transparency < 0.5 and 0.5 or Part.Transparency 
+        task.wait() 
+    end 
+end
+
+for _, Part in next, workspace.Decorations.Misc:GetDescendants() do 
+    if Part.Parent.Name == "Mushroom" then 
+        Part.CanCollide = false 
+        Part.Transparency = 0.5 
+    end 
+end
+
+setfflag("HumanoidParallelRemoveNoPhysics", "False")setfflag("HumanoidParallelRemoveNoPhysicsNoSimulate2", "False")
+hives = game.Workspace.Honeycombs:GetChildren() for i = #hives, 1, -1 do  v = game.Workspace.Honeycombs:GetChildren()[i] if v.Owner.Value == nil then game.ReplicatedStorage.Events.ClaimHive:FireServer(v.HiveID.Value) end end
+game:GetService("Players").LocalPlayer.PlayerGui.ScreenGui.BeePopUp.MutationFrame.MutationLabel.Text = ""
