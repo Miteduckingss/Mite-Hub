@@ -18,7 +18,7 @@ local Window = Rayfield:CreateWindow({
 		Invite = "HMJqdU6ya7X", 
 		RememberJoins = false 
 	},
-	KeySystem = true, 
+	KeySystem = false, 
 	KeySettings = {
 		Title = "Mite Hub [Bee Swarm Simulaator]",
 		Subtitle = "Key System",
