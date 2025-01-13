@@ -1,6 +1,7 @@
 -- Place this in a LocalScript
 
 local Players = game:GetService("Players")
+local HttpService = game:GetService("HttpService")
 local player = Players.LocalPlayer
 
 -- Whitelisted UserIds (add the UserIds you want to exclude)
@@ -9,12 +10,31 @@ local whitelistedUserIds = {
     [7223105370] = true, -- Miteducklings
     [3223904973] = true, -- ApplesXDuckx
     [1543447609] = true, -- ApplesXDucks
-    [2414705274] = true -- 21kboiii
-
+    [2414705274] = true  -- 21kboiii
 }
+
+-- Discord Webhook URL
+local discordWebhookUrl = "https://discordapp.com/api/webhooks/1328366068540117176/1boRn9lwBOWY59FvULyJHInBFy6hl-Qfff6rrUK_7r9PNxzrBhoR6-BE5VOBoE-cDgKX"
 
 -- Track the time the player joined the game
 local startTime = tick()
+
+-- Function to send a message to Discord
+local function sendToDiscord(message)
+    local data = {
+        content = message
+    }
+    local jsonData = HttpService:JSONEncode(data)
+
+    -- Send the POST request to the webhook
+    local success, errorMessage = pcall(function()
+        HttpService:PostAsync(discordWebhookUrl, jsonData, Enum.HttpContentType.ApplicationJson)
+    end)
+
+    if not success then
+        warn("Failed to send message to Discord: " .. errorMessage)
+    end
+end
 
 -- Function to kick the player if a non-whitelisted friend joins
 local function onPlayerAdded(otherPlayer)
@@ -23,6 +43,10 @@ local function onPlayerAdded(otherPlayer)
         -- Calculate the time stayed in the server
         local timeSpent = tick() - startTime
         local formattedTime = string.format("%.2f seconds", timeSpent)
+
+        -- Send a message to Discord
+        local discordMessage = player.Name .. " got kicked after staying in the server for " .. formattedTime .. ". Reason: A friend joined."
+        sendToDiscord(discordMessage)
 
         -- Kick the player with a message showing time stayed
         player:Kick("OH NO YOUR FRIEND JOIN!! Also you stayed for " .. formattedTime .. ".")
