@@ -1,7 +1,6 @@
--- Place this in a LocalScript
-
 local Players = game:GetService("Players")
-local player = Players.LocalPlayer
+local TeleportService = game:GetService("TeleportService")
+local PlaceId = game.PlaceId -- The current place ID
 
 -- Whitelisted UserIds (add the UserIds you want to exclude)
 local whitelistedUserIds = {
@@ -10,29 +9,34 @@ local whitelistedUserIds = {
     [3223904973] = true, -- ApplesXDuckx
     [1543447609] = true, -- ApplesXDucks
     [2414705274] = true -- 21kboiii
-
 }
 
--- Track the time the player joined the game
-local startTime = tick()
-
--- Function to kick the player if a non-whitelisted friend joins
-local function onPlayerAdded(otherPlayer)
-    -- Check if the other player is a friend and not whitelisted
-    if player:IsFriendsWith(otherPlayer.UserId) and not whitelistedUserIds[otherPlayer.UserId] then
-        -- Calculate the time stayed in the server
-        local timeSpent = tick() - startTime
-        local formattedTime = string.format("%.2f seconds", timeSpent)
-
-        -- Kick the player with a message showing time stayed
-        player:Kick("OH NO YOUR FRIEND JOIN!! Also you stayed for " .. formattedTime .. ".")
-    end
+-- Function to find a low-population server (uses built-in API or external service)
+local function findLowPopulationServer()
+    -- Placeholder for low-population server logic
+    -- This typically requires external server browsing APIs or a plugin
+    -- Returning the current PlaceId for simplicity
+    return PlaceId
 end
 
--- Listen for new players joining the game
-Players.PlayerAdded:Connect(onPlayerAdded)
+-- Listen for players joining
+Players.PlayerAdded:Connect(function(player)
+    -- Track join time
+    local startTime = tick()
 
--- Initial check in case friends are already in the game
-for _, otherPlayer in pairs(Players:GetPlayers()) do
-    onPlayerAdded(otherPlayer)
-end
+    -- Listen for other players joining
+    Players.PlayerAdded:Connect(function(otherPlayer)
+        -- Check if the other player is a friend and not whitelisted
+        if player:IsFriendsWith(otherPlayer.UserId) and not whitelistedUserIds[otherPlayer.UserId] then
+            -- Calculate time spent in the server
+            local timeSpent = tick() - startTime
+            local formattedTime = string.format("%.2f seconds", timeSpent)
+
+            -- Find a low-population server to teleport
+            local targetServer = findLowPopulationServer()
+            TeleportService:Teleport(targetServer, player, {
+                message = "OH NO YOUR FRIEND JOIN!! You stayed for " .. formattedTime .. "."
+            })
+        end
+    end)
+end)
