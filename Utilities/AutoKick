@@ -31,8 +31,10 @@ local function sendToDiscord(message)
         HttpService:PostAsync(discordWebhookUrl, jsonData, Enum.HttpContentType.ApplicationJson)
     end)
 
-    if not success then
-        warn("Failed to send message to Discord: " .. errorMessage)
+    if success then
+        print("Message successfully sent to Discord!")
+    else
+        warn("Failed to send message to Discord: " .. tostring(errorMessage))
     end
 end
 
