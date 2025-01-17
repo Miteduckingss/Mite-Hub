@@ -3,7 +3,8 @@ loadstring(game:HttpGet("https://raw.githubusercontent.com/Miteduckingss/Mite-Hu
 
 -- Define the game-specific scripts
 local Games = {
-    [1537690962] = "https://raw.githubusercontent.com/Chris8889/atlasbss/main/script.lua"
+    [1537690962] = "https://raw.githubusercontent.com/Chris8889/atlasbss/main/script.lua",
+    [16732694052] = "custom_loader" 
 }
 
 -- Check if the current game's PlaceId matches one in the table
