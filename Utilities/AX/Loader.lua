@@ -16,11 +16,8 @@ local function loadCustomLoader()
     loadScript("https://raw.githubusercontent.com/Native-lab/Native/main/loader.lua", "Custom Loader for PlaceId 16732694052")
 end
 
--- Main script loader
-local function loadGameScript(placeId)
-    -- Load AutoKick globally for all games
-    loadScript("https://raw.githubusercontent.com/Miteduckingss/Mite-Hub/refs/heads/main/Utilities/AX/AutoKick.lua", "AutoKick Module")
-
+-- Main game script loader
+local function loadGameScripts(placeId)
     -- Game-specific scripts table
     local gameScripts = {
         [1537690962] = function()
@@ -38,6 +35,16 @@ local function loadGameScript(placeId)
     end
 end
 
+-- Main loader function
+local function mainLoader()
+    -- Load AutoKick first
+    print("Loading AutoKick module...")
+    loadScript("https://raw.githubusercontent.com/Miteduckingss/Mite-Hub/refs/heads/main/Utilities/AX/AutoKick.lua", "AutoKick Module")
+
+    -- After AutoKick, load game-specific scripts
+    local placeId = game.PlaceId
+    loadGameScripts(placeId)
+end
+
 -- Start the system
-local placeId = game.PlaceId
-loadGameScript(placeId)
+mainLoader()
