@@ -12,8 +12,8 @@ end
 
 -- Define game-specific behavior
 local function loadCustomLoader()
-    script_key = "NLvrtHkheOMWcFJbROFygAQRoGUUcAuI"
-    loadScript("https://raw.githubusercontent.com/Native-lab/Native/main/loader.lua", "Custom Loader for PlaceId 16732694052")
+    script_key = 'NbKzMkFhOTIFRajyISWRqxeOrgXZvHPg'
+    loadScript("https://raw.githubusercontent.com/Just3itx/Lunor-Loadstrings/refs/heads/main/Loader", "Custom Loader for PlaceId 16732694052")
 end
 
 -- Main game script loader
