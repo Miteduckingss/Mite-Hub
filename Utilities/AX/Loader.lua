@@ -4,47 +4,50 @@ local function loadScript(url, description)
         loadstring(game:HttpGet(url, true))()
     end)
     if not success then
-        warn("Failed to load " .. description .. ": " .. tostring(err))
+        warn("❌ Failed to load " .. description .. ": " .. tostring(err))
     else
-        print(description .. " loaded successfully.")
+        print("✅ " .. description .. " loaded successfully.")
     end
 end
 
--- Define game-specific behavior
+-- Custom loader for PlaceId 16732694052
 local function loadCustomLoader()
-    script_key = 'NbKzMkFhOTIFRajyISWRqxeOrgXZvHPg'
-    loadScript("https://raw.githubusercontent.com/Just3itx/Lunor-Loadstrings/refs/heads/main/Loader", "Custom Loader for PlaceId 16732694052")
+    script_key = "slEVRfpmUsesyIQJAtxHAayspAVZIWCS"
+    loadScript("https://raw.githubusercontent.com/Native-lab/Native/main/loader.lua", "Custom Loader for PlaceId 16732694052")
 end
 
--- Main game script loader
+-- Custom dual loader for PlaceId 13822562292
+local function loadDualScripts()
+    loadScript("https://raw.githubusercontent.com/cryprol/MidnightChasers/refs/heads/main/Library", "MidnightChasers Library")
+    loadScript("https://raw.githubusercontent.com/cryprol/AntiAFK/refs/heads/main/AntiAFK", "AntiAFK Script")
+end
+
+-- Main game-specific loader
 local function loadGameScripts(placeId)
-    -- Game-specific scripts table
     local gameScripts = {
         [1537690962] = function()
             loadScript("https://raw.githubusercontent.com/Chris8889/atlasbss/main/script.lua", "Game Script for PlaceId 1537690962")
         end,
-        [16732694052] = loadCustomLoader -- Special loader for PlaceId 16732694052
+        [16732694052] = loadCustomLoader,
+        [13822562292] = loadDualScripts
     }
 
-    -- Check and load the script for the current PlaceId
     if gameScripts[placeId] then
-        print("Loading script for PlaceId " .. tostring(placeId))
+        print("🎮 Detected PlaceId: " .. tostring(placeId))
         gameScripts[placeId]()
     else
-        warn("No script found for PlaceId " .. tostring(placeId))
+        warn("⚠️ No script found for PlaceId " .. tostring(placeId))
     end
 end
 
--- Main loader function
+-- Main loader
 local function mainLoader()
-    -- Load AutoKick first
-    print("Loading AutoKick module...")
+    print("🔁 Loading AutoKick module...")
     loadScript("https://raw.githubusercontent.com/Miteduckingss/Mite-Hub/refs/heads/main/Utilities/AX/AutoKick.lua", "AutoKick Module")
 
-    -- After AutoKick, load game-specific scripts
-    local placeId = game.PlaceId
-    loadGameScripts(placeId)
+    -- Proceed to game-specific scripts
+    loadGameScripts(game.PlaceId)
 end
 
--- Start the system
+-- Start
 mainLoader()
