@@ -18,8 +18,8 @@ end
 
 -- Dual loader for PlaceId 13822562292
 local function loadDualScripts()
-    loadScript("https://raw.githubusercontent.com/cryprol/MidnightChasers/refs/heads/main/Library", "MidnightChasers Library")
-    loadScript("https://raw.githubusercontent.com/cryprol/AntiAFK/refs/heads/main/AntiAFK", "AntiAFK Script")
+    loadScript("https://raw.githubusercontent.com/cryprol/MidnightChasers/main/Library", "MidnightChasers Library")
+    loadScript("https://raw.githubusercontent.com/cryprol/AntiAFK/main/AntiAFK", "AntiAFK Script")
 end
 
 -- Forsaken loader for PlaceId 18687417158
@@ -36,20 +36,20 @@ end
 
 -- Chicken Jockey for PlaceId 71412777087552
 local function loadChickenJockey()
-    loadScript("https://raw.githubusercontent.com/Miteduckingss/Mite-Hub/refs/heads/main/Utilities/AX/ChickenJockey2PlayerObby.lua", "Chicken Jockey 2 Player Obby")
+    loadScript("https://raw.githubusercontent.com/Miteduckingss/Mite-Hub/main/Utilities/AX/ChickenJockey2PlayerObby.lua", "Chicken Jockey 2 Player Obby")
 end
 
 -- BeNpcOrDie + AntiAFK for PlaceId 11276071411
 local function loadBeNpcOrDie()
     local success, err = pcall(function()
-        loadstring(game:HttpGet("https://raw.githubusercontent.com/Bac0nHck/Scripts/refs/heads/main/BeNpcOrDie"))('More scripts: t.me/arceusxscripts')
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/Bac0nHck/Scripts/main/BeNpcOrDie"))('More scripts: t.me/arceusxscripts')
     end)
     if not success then
         warn("❌ Failed to load BeNpcOrDie: " .. tostring(err))
     else
         print("✅ BeNpcOrDie loaded successfully.")
     end
-    loadScript("https://raw.githubusercontent.com/cryprol/AntiAFK/refs/heads/main/AntiAFK", "AntiAFK Script")
+    loadScript("https://raw.githubusercontent.com/cryprol/AntiAFK/main/AntiAFK", "AntiAFK Script")
 end
 
 -- Game-specific loader
@@ -76,7 +76,7 @@ end
 -- Main loader
 local function mainLoader()
     print("🔁 Loading AutoKick module...")
-    loadScript("https://raw.githubusercontent.com/Miteduckingss/Mite-Hub/refs/heads/main/Utilities/AX/AutoKick.lua", "AutoKick Module")
+    loadScript("https://raw.githubusercontent.com/Miteduckingss/Mite-Hub/main/Utilities/AX/AutoKick.lua", "AutoKick Module")
 
     -- Then load game-specific script
     loadGameScripts(game.PlaceId)
