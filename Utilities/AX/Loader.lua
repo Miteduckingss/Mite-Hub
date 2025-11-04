@@ -56,7 +56,7 @@ end
 local function loadGameScripts(placeId)
     local gameScripts = {
         [1537690962] = function()
-            loadScript("https://raw.githubusercontent.com/Chris8889/atlasbss/main/script.lua", "Game Script for PlaceId 1537690962")
+            loadScript("https://raw.githubusercontent.com/Chris12089/atlasbss/main/script.lua", "Game Script for PlaceId 1537690962")
         end,
         [16732694052] = loadCustomLoader,
         [13822562292] = loadDualScripts,
