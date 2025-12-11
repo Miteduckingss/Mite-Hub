@@ -10,7 +10,6 @@ local whitelistedUserIds = {
     [3223904973] = true, -- ApplesXDuckx
     [1543447609] = true, -- ApplesXDucks
     [2414705274] = true -- 21kboiii
-
 }
 
 -- Track the time the player joined the game
@@ -20,12 +19,16 @@ local startTime = tick()
 local function onPlayerAdded(otherPlayer)
     -- Check if the other player is a friend and not whitelisted
     if player:IsFriendsWith(otherPlayer.UserId) and not whitelistedUserIds[otherPlayer.UserId] then
+
         -- Calculate the time stayed in the server
         local timeSpent = tick() - startTime
         local formattedTime = string.format("%.2f seconds", timeSpent)
 
-        -- Kick the player with a message showing time stayed
-        player:Kick("OH NO YOUR FRIEND JOIN!! Also you stayed for " .. formattedTime .. ".")
+        -- Kick the player and show WHO joined
+        player:Kick(
+            "OH NO YOUR FRIEND " .. otherPlayer.Name ..
+            " JOINED!! You stayed for " .. formattedTime .. "."
+        )
     end
 end
 
