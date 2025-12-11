@@ -8,35 +8,34 @@ local whitelistedUserIds = {
     [3638973619] = true, -- MavisSiAnakBaik
     [7223105370] = true, -- Miteducklings
     [3223904973] = true, -- ApplesXDuckx
-    [2414705274] = true -- 21kboiii
+    [2414705274] = true  -- 21kboiii
 }
 
--- Track the time the player joined the game
+-- Track time the player joined
 local startTime = tick()
 
--- Function to kick the player if a non-whitelisted friend joins
+-- Function to kick when a non-whitelisted friend joins
 local function onPlayerAdded(otherPlayer)
-    -- Check if the other player is a friend and not whitelisted
     if player:IsFriendsWith(otherPlayer.UserId) and not whitelistedUserIds[otherPlayer.UserId] then
         
-        -- Calculate the time stayed in the server
+        -- Time spent
         local timeSpent = tick() - startTime
         local formattedTime = string.format("%.2f seconds", timeSpent)
 
-        local friendName = otherPlayer.Name -- 🎉 Added: grab the friend's username
+        -- Username (@DisplayName)
+        local friendName = otherPlayer.Name
+        local friendDisplay = otherPlayer.DisplayName
+        local finalName = friendName .. "(@" .. friendDisplay .. ")"
 
-        -- Kick the player with a message showing time stayed + friend name
-        player:Kick(
-            "OH NO YOUR FRIEND " .. friendName .. " JOIN!! Also you stayed for " 
-            .. formattedTime .. "."
-        )
+        -- Kick
+        player:Kick("OH NO YOUR FRIEND " .. finalName .. " JOIN!! Also you stayed for " .. formattedTime .. ".")
     end
 end
 
--- Listen for new players joining the game
+-- Listen for players joining
 Players.PlayerAdded:Connect(onPlayerAdded)
 
--- Initial check in case friends are already in the game
+-- Check already existing players
 for _, otherPlayer in pairs(Players:GetPlayers()) do
     onPlayerAdded(otherPlayer)
 end
