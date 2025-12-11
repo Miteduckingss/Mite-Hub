@@ -28,7 +28,7 @@ local function onPlayerAdded(otherPlayer)
 
         -- Kick the player with a message showing time stayed + friend name
         player:Kick(
-            "OH NO YOUR FRIEND **" .. friendName .. "** JOIN!! Also you stayed for " 
+            "OH NO YOUR FRIEND "" .. friendName .. "" JOIN!! Also you stayed for " 
             .. formattedTime .. "."
         )
     end
