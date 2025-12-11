@@ -8,7 +8,6 @@ local whitelistedUserIds = {
     [3638973619] = true, -- MavisSiAnakBaik
     [7223105370] = true, -- Miteducklings
     [3223904973] = true, -- ApplesXDuckx
-    [1543447609] = true, -- ApplesXDucks
     [2414705274] = true -- 21kboiii
 }
 
