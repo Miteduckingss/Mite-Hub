@@ -10,7 +10,7 @@ local whitelistedUserIds = {
     [3223904973] = true, -- ApplesXDuckx
     [1543447609] = true, -- ApplesXDucks
     [2414705274] = true,  -- 21kboiii
-    [9836229793] = true -- bssfc193
+    [11241591368] = true -- avenqyra
 }
 
 -- Track time player joined
